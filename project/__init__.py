@@ -43,9 +43,10 @@ def script_open(author, filename):
 @app.route('/api/register', methods=['POST'])
 def register():
     json_data = request.json
+    email = json_data['email'].lower()
     user = User(
         name=json_data['name'],
-        email=json_data['email'],
+        email=email,
         password=json_data['password']
     )
     try:
@@ -61,9 +62,9 @@ def register():
 @app.route('/api/login', methods=['POST'])
 def login():
     json_data = request.json
-    user = User.query.filter_by(email=json_data['email']).first()
-    if user and bcrypt.check_password_hash(
-            user.password, json_data['password']):
+    email = json_data['email'].lower()
+    user = User.query.filter_by(email=email).first()
+    if user and bcrypt.check_password_hash(user.password, json_data['password']):
         session['userid'] = user.id
         session['logged_in'] = True
         session['name'] = user.name
@@ -72,6 +73,7 @@ def login():
         status = True
     	return jsonify({'result': status, 'name': user.name, 'user_type': usertype})
     else:
+        print("ERROR: failed login")
         status = False
     return jsonify({'result': status})
 
