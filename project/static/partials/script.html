@@ -1,0 +1,218 @@
+<h1>Producer - Scripts</h1>
+
+<div class="row">
+    <div class="col-xs-12">
+        
+        
+        <form class="">
+            <div class="row">         
+                <div class="form-group col-sm-4">
+                    <label for="filterSeason">Season:</label>
+                    <select id="filterSeason" class="form-control" 
+                            ng-model="filterBy.season" 
+                            ng-options="item.id as item.year for item in scriptdata.seasons" 
+                            ng-change="filterUpdate()">
+                        <option value=""> - All -</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="filterStatus">Status:</label>
+                    <select id="filterStatus" class="form-control" 
+                            ng-model="filterBy.status" 
+                            ng-options="item.id as item.status for item in scriptdata.statuses" 
+                            ng-change="filterUpdate()">
+                        <option value=""> - All -</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-4">
+                    <label for="filterAuthor">Author:</label>
+                    <select id="filterAuthor" class="form-control" 
+                            ng-model="filterBy.author" 
+                            ng-options="item.id as item.name for item in (scriptdata.authors | filter:{id:'!-1'})" 
+                            ng-change="filterUpdate()">
+                        <option value=""> - All -</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+        
+        <form name="myForm">
+        <table class="table table-striped">
+            <thead>
+            <tr class="hidden-sm-down">
+                <th>
+                    <a href="" ng-click="sortBy = 'id'; sortReverse = !sortReverse">
+                        Id
+                        <span ng-show="sortBy == 'id' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortBy == 'id' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <a href="" ng-click="sortBy = 'season'; sortReverse = !sortReverse">
+                        Season
+                        <span ng-show="sortBy == 'season' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortBy == 'season' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <a href="" ng-click="sortBy = 'status'; sortReverse = !sortReverse">
+                        Status
+                        <span ng-show="sortBy == 'status' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortBy == 'status' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <a href="" ng-click="sortBy = 'name'; sortReverse = !sortReverse">
+                        Title
+                        <span ng-show="sortBy == 'name' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortBy == 'name' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <a href="" ng-click="sortBy = 'filename'; sortReverse = !sortReverse">
+                        File
+                        <span ng-show="sortBy == 'filename' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortBy == 'filename' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <a href="" ng-click="sortBy = 'author'; sortReverse = !sortReverse">
+                        Author
+                        <span ng-show="sortBy == 'author' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortBy == 'author' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <a href="" ng-click="sortBy = 'submission_date'; sortReverse = !sortReverse">
+                        Submission Date
+                        <span ng-show="sortBy == 'submission_date' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortBy == 'submission_date' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <button ng-click="addScript = true" ng-hide="addScript" class="btn btn-outline-primary">Add</button>
+                    <button ng-click="addScript = false" ng-show="addScript" class="btn btn-outline-primary">Cancel</button>
+                </th>
+            </tr>
+            </thead>
+            
+            <tbody>
+            
+            <tr ng-show="addScript">
+                
+                <td>New</td>
+                <td>
+                    <select class="form-control" ng-model="newScript.season" ng-options="item.id as item.year for item in scriptdata.seasons">
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control" ng-model="newScript.status" ng-options="item.id as item.status for item in scriptdata.statuses">
+                    </select>
+                </td>
+                <td>
+                    <input class="form-control" name="scriptName" type="text" ng-model="newScript.name" ng-required="addScript"/>
+                </td>
+                <td>
+                    <input class="form-control" type="file" ngf-select ng-model="newScript.file" name="file"    
+                         accept="application/pdf" ngf-max-size="10MB" ng-required="addScript"
+                         ngf-model-invalid="errorFile">
+                    <i ng-show="myForm.file.$error.maxSize">File too large 
+                      {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
+                    <button ng-click="newScript.scriptFile = null" ng-show="newScript.scriptFile" class="btn btn-outline-danger">Remove</button>
+                </td>
+                <td>
+                    <select class="form-control" ng-model="newScript.author" ng-options="item.id as item.name for item in scriptdata.authors">
+                    </select>
+                </td>
+                <td>
+                    Now
+                </td>
+                <td>
+                    <button ng-disabled="!myForm.$valid" class="btn btn-outline-success" ng-click="update(newScript, 'add')">Save</button> 
+                    <span class="progress" ng-show="newScript.scriptFile.progress >= 0">
+                        <div style="width:{{newScript.scriptFile.progress}}%" 
+                            ng-bind="newScript.scriptFile.progress + '%'"></div>
+                      </span>          
+                </td>
+                
+            </tr>
+            
+            <tr ng-hide></tr>
+            <tr ng-show="newScript.author == -1 && addScript">
+                <td>Author</td> 
+                <td colspan=3>Name:<input class="form-control" type="text" ng-model="newScript.user_name" ng-required="newScript.author == -1 && addScript"></td>
+                <td colspan=3>Email:<Input class="form-control" type="email" ng-model="newScript.user_email" ng-required="newScript.author == -1 && addScript"></td>
+                <td></td>
+            </tr>
+            
+            <tr ng-repeat="script in scriptdata.scripts | orderBy:sortBy:sortReverse | filter:filterBy:True">
+                <td class="hidden-sm-down">{{ script.id }}</td>
+                <td>
+                    <div ng-hide="editingData[script.id]"><span class="hidden-md-up">Season: </span>{{ (scriptdata.seasons | filter : {'id': script.season})[0].year }}</div>
+                    <div ng-show="editingData[script.id]">
+                        <span class="hidden-md-up">Season: </span>
+                        <select class="form-control" ng-model="script.season" ng-options="item.id as item.year for item in scriptdata.seasons">
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    
+                    <div ng-hide="editingData[script.id]"><span class="hidden-md-up">Status: </span>{{ (scriptdata.statuses | filter : {'id': script.status})[0].status }}</div>
+                    <div ng-show="editingData[script.id]">
+                        <span class="hidden-md-up">Status: </span>
+                        <select class="form-control" ng-model="script.status" ng-options="item.id as item.status for item in scriptdata.statuses">
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div ng-hide="editingData[script.id]"><span class="hidden-md-up">Title: </span>{{ script.name }}</div>
+                    <div ng-show="editingData[script.id]">
+                        <span class="hidden-md-up">Title: </span>
+                        <input class="form-control" type="text" ng-model="script.name" ng-required="editingData[script.id]"/>
+                    </div>
+                </td>
+                <td>
+                    <div ng-hide="editingData[script.id]">
+                        <span class="hidden-md-up">File: </span>
+                        <a href="/script/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-upload_date')[0].filename }}" target="_blank">Open</a> | 
+                        <a href="/script/download/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-upload_date')[0].filename }}">Download</a>
+                    </div>
+                    <div ng-show="editingData[script.id]">
+                        <span class="hidden-md-up">File: </span>
+                        <input class="form-control" type="file" ngf-select ng-model="script.file" name="file"    
+                             accept="application/pdf" ngf-max-size="10MB"
+                             ngf-model-invalid="errorFile">
+                        <i ng-show="myForm.file.$error.maxSize">File too large 
+                          {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
+                        <sub>Leave blank to keep existing file</sub>
+                        <button ng-click="script.scriptFile = null" ng-show="script.scriptFile" class="btn btn-outline-danger">Remove</button>
+                    </div>
+                </td>
+                <td>
+                    <div ng-hide="editingData[script.id]"><span class="hidden-md-up">Author: </span>{{ (scriptdata.authors | filter : {'id': script.author} : true)[0].name }}</div>
+                    <div ng-show="editingData[script.id]">
+                        <span class="hidden-md-up">Author: </span>
+                        <select class="form-control" ng-model="script.author" ng-options="item.id as item.name for item in scriptdata.authors">
+                        </select>
+                    </div>                
+                </td>
+                <td class="hidden-sm-down">{{ script.submission_date }}</td>
+                <!--
+                <td>
+                    <div ng-hide="editingData[question.id]">{{ question.question }}</div>
+                    <div ng-show="editingData[question.id]"><input class="form-control" type="text" ng-model="question.question" /></div>
+                </td>
+                -->
+                <td>
+                    <button class="btn btn-outline-secondary" ng-hide="editingData[script.id]" ng-click="modify(script)">Modify</button>
+                    <button class="btn btn-outline-primary" ng-show="editingData[script.id]" ng-click="cancel(script)">Cancel</button>
+                    <button class="btn btn-outline-success" ng-disabled="!myForm.$valid" ng-show="editingData[script.id]" ng-click="update(script, 'update')">Save</button>
+                    <button class="btn btn-outline-danger" ng-show="editingData[script.id]" confirmed-click="update(script, 'delete')" ng-confirm-click="Are you sure?">Delete</buton>
+                </td>
+                
+            </tr>
+            </tbody>
+        </table>
+        </form>
+    </div>
+</div>

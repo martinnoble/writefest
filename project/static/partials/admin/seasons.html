@@ -1,0 +1,21 @@
+<h1>Admin - Seasons</h1>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h4>Seasons</h4>
+        <table class="table">
+            <tr>
+                <th>Id</th>
+                <th>Year</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+            </tr>
+            <tr ng-repeat="season in admindata.seasons">
+                <td>{{ season.id }}</td>
+                <td>{{ season.year }}</td>
+                <td>{{ season.start_date }}</td>
+                <td>{{ season.end_date }}</td>
+            </tr>
+        </table>
+    </div>
+</div>

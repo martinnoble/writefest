@@ -9,3 +9,5 @@ blog.md
 migrations
 _old
 logs
+project/uploads/*
+!project/uploads/.gitkeep 

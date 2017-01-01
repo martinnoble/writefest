@@ -1,0 +1,57 @@
+<h1>Admin - Seasons</h1>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h4>Questions</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Question</th>
+                    <th>Description</th>
+                    <th>Type</th>
+                    <th></th>
+                </tr>
+            </thea>
+            
+            <tbody>
+                <tr>
+                    <td>New</td>
+                    <td>
+                        <input class="form-control" type="text" ng-model="newQuestion.question"/>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-success" ng-click="update('questions', newQuestion, 'add')">Save</button>           
+                    </td>
+                </tr>
+            
+                <tr ng-repeat="question in admindata.questions">
+                    <td>{{ question.id }}</td>
+                    <td>
+                        <div ng-hide="editingData[question.id]">{{ question.question }}</div>
+                        <div ng-show="editingData[question.id]"><input class="form-control" type="text" ng-model="question.question" /></div>
+                    </td>
+                    <td>
+                        <div ng-hide="editingData[question.id]">{{ question.description }}</div>
+                        <div ng-show="editingData[question.id]"><input class="form-control" type="text" ng-model="question.description" /></div>
+                    </td>
+                    <td>
+                        <div ng-show="!editingData[question.id] && question.type == 1">Normal</div>
+                        <div ng-show="!editingData[question.id] && question.type == 2">Final Vote</div>
+                        <div ng-show="editingData[question.id]">
+                            <select class="form-control" ng-model="question.type" ng-options="item.id as item.type for item in questiontypes">
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-secondary" ng-hide="editingData[question.id]" ng-click="modify(question)">Modify</button>
+                        <button class="btn btn-outline-primary" ng-show="editingData[question.id]" ng-click="cancel(question)">Cancel</button>
+                        <button class="btn btn-outline-success" ng-show="editingData[question.id]" ng-click="update('questions', question, 'update')">Save</button>
+                        <button class="btn btn-outline-danger" ng-show="editingData[question.id]" confirmed-click="update('questions', question, 'delete')" ng-confirm-click="Are you sure?">Delete</buton>
+                    </td>
+                </tr>
+            </tbody>
+            
+        </table>
+    </div>
+</div>

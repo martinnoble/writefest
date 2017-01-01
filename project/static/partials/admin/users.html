@@ -1,0 +1,59 @@
+<h1>Admin - Seasons</h1>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h4>Users</h4>
+        <table class="table">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>User Type</th>
+                <th></th>
+            </tr>
+            <tr ng-repeat="user in admindata.users">
+                <td>{{ user.id }}</td>
+                <td>
+                    <div ng-hide="editingData[user.id]">{{ user.name }}</div>
+                    <div ng-show="editingData[user.id]"><input class="form-control" type="text" ng-model="user.name" /></div>
+                </td>
+                <td>
+                    <div ng-hide="editingData[user.id]">{{ user.email }}</div>
+                    <div ng-show="editingData[user.id]"><input class="form-control" type="text" ng-model="user.email" /></div>
+                </td>
+                <td>
+                    <div ng-hide="editingData[user.id]">*****</div>
+                    <div ng-show="editingData[user.id]"><input class="form-control" type="password" ng-model="user.password" /></div>
+                </td>
+                <td>
+                    <div ng-hide="editingData[user.id]">{{ user.user_type_name }}</div>
+                    <div ng-show="editingData[user.id]">
+                        <select class="form-control" ng-model="user.user_type" ng-options="item.id as item.type for item in admindata.usertypes">
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <button class="btn btn-outline-secondary" ng-hide="editingData[user.id]" ng-click="modify(user)">Modify</button>
+                    <button class="btn btn-outline-primary" ng-show="editingData[user.id]" ng-click="cancel(user)">Cancel</button>
+                    <button class="btn btn-outline-success" ng-show="editingData[user.id]" ng-click="update('users', user, 'update')">Save</button>
+                    <button class="btn btn-outline-danger" ng-show="editingData[user.id]" confirmed-click="update('users', user, 'delete')" ng-confirm-click="Are you sure?">Delete</buton>
+                </td>
+            </tr>
+            
+            <tr>
+                <td>New</td>
+                <td><input class="form-control" type="text" ng-model="newUser.name"/></td>
+                <td><input class="form-control" type="text" ng-model="newUser.email"/></td>
+                <td><input class="form-control" type="password" ng-model="newUser.password"/></td>
+                <td>
+                    <select class="form-control" ng-model="newUser.user_type" ng-options="item.id as item.type for item in admindata.usertypes">
+                    </select>
+                </td>
+                <td>
+                    <button class="btn btn-outline-success" ng-click="update('users', newUser, 'add')">Save</button> 
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

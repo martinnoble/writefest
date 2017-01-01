@@ -1,0 +1,79 @@
+
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+
+input.ng-invalid {
+    background-color: #ffe6e6 !important;
+}
+input.ng-valid {
+    background-color: #e6ffe6 !important;
+}
+input.ng-pristine {
+    background-color: #e6faff !important;
+}
+
+form .progress {
+    line-height: 15px;
+}
+
+
+.progress {
+    display: inline-block;
+    width: 100px;
+    border: 3px groove #CCC;
+}
+
+.progress div {
+    font-size: smaller;
+    background: orange;
+    width: 0;
+}
+
+table .btn, .ratingData .btn {
+    display: block;
+    width: 100%;
+}
+
+.btnCol {
+    width: 75px;
+}
+
+.idCol {
+    width: 50px;
+}
+
+.ratingData {
+    margin-bottom: 20px;
+}
+
+.ratingData .row {
+    padding-bottom: 10px;
+}
+
+@media (min-width: 768px) {
+    .row-striped:nth-of-type(odd) {
+      background-color: #efefef;
+    }
+
+    .row-striped:nth-of-type(even) {
+      background-color: #ffffff;
+    }
+    
+}
+
+
+@media (max-width: 768px) {
+
+    td, th {
+        display: block;
+    }
+   
+    
+}
