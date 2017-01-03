@@ -113,7 +113,7 @@
                     <input class="form-control" name="scriptName" type="text" ng-model="newScript.name" ng-required="addScript"/>
                 </td>
                 <td>
-                    <input class="form-control" type="file" ngf-select ng-model="newScript.file" name="file"    
+                    <input class="form-control-file" type="file" ngf-select ng-model="newScript.file" name="file"    
                          accept="application/pdf" ngf-max-size="10MB" ng-required="addScript"
                          ngf-model-invalid="errorFile">
                     <i ng-show="myForm.file.$error.maxSize">File too large 
@@ -179,7 +179,7 @@
                     </div>
                     <div ng-show="editingData[script.id]">
                         <span class="hidden-md-up">File: </span>
-                        <input class="form-control" type="file" ngf-select ng-model="script.file" name="file"    
+                        <input class="form-control-file" type="file" ngf-select ng-model="script.file" name="file"    
                              accept="application/pdf" ngf-max-size="10MB"
                              ngf-model-invalid="errorFile">
                         <i ng-show="myForm.file.$error.maxSize">File too large 

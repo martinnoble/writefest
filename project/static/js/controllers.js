@@ -131,7 +131,10 @@ angular.module('myApp').controller('ratingController',
                 
                     questionId = $scope.ratingdata.questions[i].id;
                 
-                    ratings = filterFilter($scope.ratingdata.ratings, {question_id: questionId, script_id: script});
+                    ratings = filterFilter($scope.ratingdata.ratings, {question_id: questionId, script_id: script}, true);
+
+                    console.log("Question " + questionId);
+                    console.log(ratings);
 
                     ratingVal = 0;
                     if (ratings.length) {
@@ -141,7 +144,12 @@ angular.module('myApp').controller('ratingController',
                     $scope.currentRating[questionId] = ratingVal;
                 
                 }
-
+                
+                selectedComments = filterFilter($scope.ratingdata.comments, {script_id: script}, true)[0];
+                if (selectedComments) {
+                    $scope.currentRating['notes'] = selectedComments.notes;
+                    $scope.currentRating['feedback'] = selectedComments.feedback;
+                }
                 console.log($scope.currentRating);
 
             

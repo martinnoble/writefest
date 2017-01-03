@@ -18,7 +18,7 @@ app.config.from_object(BaseConfig)
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 
-from project.models import User, UserType, Season, Question, Script, ScriptStatus, File, Rating
+from project.models import User, UserType, Season, Question, Script, ScriptStatus, File, Rating, Comments
 
 
 # routes
@@ -339,6 +339,8 @@ def rating():
         
         ratings = Rating.query.filter_by(user_id=session['userid']).all()
         
+        comments = Comments.query.filter_by(user_id=session['userid']).all()
+        
         questions = Question.query.all()
                 
         result = {
@@ -346,6 +348,7 @@ def rating():
                 'scripts': [ob.dumpNames() for ob in scripts],
                 'ratings': [ob.dump() for ob in ratings],
                 'questions': [ob.dump() for ob in questions],
+                'comments': [ob.dump() for ob in comments]
             }
         return jsonify(result)
     else:
@@ -357,18 +360,36 @@ def rating():
         print(script)
         print(ratingdata)
         
+        print("Saving comments")
+        comment = Comments.query.filter_by(user_id=session['userid'], script_id=script).first()
+        
+        if comment:
+            print("old: " + str(comment))
+            comment.notes = ratingdata['notes']
+            comment.feedback = ratingdata['feedback']
+        else:
+            comment = Comments(user=session['userid'], script=script, notes=ratingdata['notes'], feedback=ratingdata['feedback'])
+            db.session.add(comment)
+        print("new: " + str(comment))
+        
         for key in ratingdata:
             print("Question: " + key);
         
-            rating = Rating.query.filter_by(user_id=session['userid'], script_id=script, question_id=key).first()
-            
-            if rating:
-                print("old: " + str(rating))
+            if key in ['notes', 'feedback']:
+                #skip them - handled seperately
+                pass
                 
-                rating.rating = ratingdata[key]
             else:
-                rating = Rating(user=session['userid'], script=script, question=key, rating=ratingdata[key])
-                db.session.add(rating)
+        
+                rating = Rating.query.filter_by(user_id=session['userid'], script_id=script, question_id=key).first()
+            
+                if rating:
+                    print("old: " + str(rating))
+                
+                    rating.rating = ratingdata[key]
+                else:
+                    rating = Rating(user=session['userid'], script=script, question=key, rating=ratingdata[key])
+                    db.session.add(rating)
             
             print("new: " + str(rating))
             

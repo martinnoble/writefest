@@ -6,6 +6,43 @@ from project import db, bcrypt
 from flask import jsonify
 import uuid
 
+class Comments(db.Model):
+
+    __tablename__ = "comments"
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    script_id = db.Column(db.Integer, db.ForeignKey('script.id'), nullable=False)
+    notes = db.Column(db.String(1024))
+    feedback = db.Column(db.String(1024))
+    
+    users = db.relationship("User")
+    scripts = db.relationship("Script")
+    
+    def __init__(self, user, script, notes = '', feedback = ''):
+        self.user_id = user
+        self.script_id = script
+        self.notes = notes
+        self.feedback = feedback
+
+    def dump(self):
+        return {'id': self.id, 
+                'user_id': self.user_id,
+                'script_id': self.script_id,
+                'notes': self.notes,
+                'feedback': self.feedback
+                }
+    
+    def dump_comment(self):
+        return {'id': self.id,
+                'script_id': self.script_id,
+                'feedback': self.feedback
+                }
+    
+    def __repr__(self):
+        return '<Comments {0}: User:{1} Script:{2} Notes:{3}, Feedback:{4}>'.format(self.id, self.user_id, self.script_id, self.notes, self.feedback)
+
+
 class Rating(db.Model):
 
     __tablename__ = "rating"
