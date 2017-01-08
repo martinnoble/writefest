@@ -424,7 +424,7 @@ def producer():
 
     finalQId = Question.query.filter_by(type = 2).first().id
 
-    ratings = Rating.query.filter_by(question_id = finalQId).all()
+    ratings = Rating.query.all()
 
     curSeason = Season.query.order_by('-id').first()
 
@@ -444,7 +444,8 @@ def producer():
                 'users': [ob.dump() for ob in users],
                 'ratings': [ob.dump() for ob in ratings],
                 'scripts': [ob.dump() for ob in scripts],
-                'comments': [ob.dump() for ob in comments]
+                'comments': [ob.dump() for ob in comments],
+                'finalQId': finalQId
             }
     
     return jsonify(result)

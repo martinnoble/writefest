@@ -3,9 +3,11 @@
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from project import app, db
-from project.models import User, UserType, Question, Season, ScriptStatus, Script, File
+from project.models import User, UserType, Question, Season, ScriptStatus, Script, File, Rating, Comments
 import datetime
 import time
+import random
+from loremipsum import get_sentences
 
 
 migrate = Migrate(app, db)
@@ -40,10 +42,16 @@ def drop_db():
 @manager.command
 def create_users():
     """Creates test users."""
-    db.session.add(User(name='Test Author', email='author@writefest.com', password='author', user_type=1))
-    db.session.add(User(name='Test User', email='user@writefest.com', password='user', user_type=2))
-    db.session.add(User(name='Test Producer', email='producer@writefest.com', password='producer', user_type=3))
-    db.session.add(User(name='Test Admin', email='admin@writefest.com', password='admin', user_type=4))
+    db.session.add(User(name='First Author', email='author1@writefest.com', password='author', user_type=1))
+    db.session.add(User(name='Second Author', email='author2@writefest.com', password='author', user_type=1))
+    db.session.add(User(name='Third Author', email='author3@writefest.com', password='author', user_type=1))
+    db.session.add(User(name='First User', email='user1@writefest.com', password='user', user_type=2, can_rate=True))
+    db.session.add(User(name='Second User', email='user2@writefest.com', password='user', user_type=2, can_rate=True))
+    db.session.add(User(name='Third User', email='user3@writefest.com', password='user', user_type=2, can_rate=True))
+    db.session.add(User(name='Fourth User', email='user4@writefest.com', password='user', user_type=2, can_rate=True))
+    db.session.add(User(name='Fifth User', email='user5@writefest.com', password='user', user_type=2, can_rate=True))
+    db.session.add(User(name='Producer', email='producer@writefest.com', password='producer', user_type=3, can_rate=True))
+    db.session.add(User(name='Admin', email='admin@writefest.com', password='admin', user_type=4))
     db.session.commit()
 
 
@@ -66,13 +74,31 @@ def create_data():
     db.session.add(Question(question='Ending'))
     db.session.add(Question(question='Suitability for WriteFest', description='(i.e. can it be performed with little or no set)'))
     
-    db.session.add(Script(name='Test Script', author=1, season=1, status=1,))
-    db.session.add(Script(name='Another Script', author=1, season=1, status=2,))
-    db.session.add(File(filename='1/test.pdf', script=1))
-    time.sleep(2)
-    db.session.add(File(filename='1/test_v2.pdf', script=1))
-    time.sleep(1)
-    db.session.add(File(filename='1/test2.pdf', script=2))
+    #db.session.add(Script(name='First Script', author=1, season=1, status=1,))
+    #db.session.add(Script(name='Second Script', author=1, season=1, status=2,))
+    #db.session.add(Script(name='Script Three', author=2, season=1, status=1,))
+    #db.session.add(Script(name='Script Four', author=2, season=1, status=2,))
+    
+    sentences = get_sentences(200)
+    status = 1
+    users = [4,5,6,7,8,9]
+    
+    for script in range(1,61):
+        if random.randint(0, 100) > 80:
+            status = 1
+        else:
+            status = 2
+            
+        db.session.add(Script(name=random.choice(sentences), author=random.randint(1, 3), season=1, status=status))
+        db.session.add(File(filename='1/test.pdf', script=script))
+        
+        for user in users:
+            if random.randint(0, 100) < 95:        
+                db.session.add(Rating(question=1, user=user, script=script, rating=random.randint(0, 4)))
+                db.session.add(Comments(user=user, script=script, duration=random.randint(2, 20), notes=random.choice(sentences), feedback=random.choice(sentences) ))    
+                for question in range(2,15):
+                    db.session.add(Rating(question=question, user=user, script=script, rating=random.randint(0, 5)))
+    
     db.session.commit()
 
 

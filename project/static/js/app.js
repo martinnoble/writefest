@@ -106,9 +106,7 @@ myApp.run(function ($rootScope, $location, $route, AuthService) {
                    { 'id': 1, 'answer':'No' },
                    { 'id': 0, 'answer':'Not Rated' }
                     ];
-        
-        console.log($rootScope.user);
-      
+
         $rootScope.username = AuthService.getUserName();
         
         if (next.access && next.access.restricted && AuthService.isAuthor() && next.access.type != 'author')
@@ -122,8 +120,8 @@ myApp.run(function ($rootScope, $location, $route, AuthService) {
             $route.reload();
         }
         else if (next.access && next.access.restricted && !AuthService.isLoggedIn()){
-          $location.path('/login');
-          $route.reload();
+            $location.path('/login');
+            $route.reload();
         }
         else if (AuthService.isAdmin() && $location.path() == '/author')
         {

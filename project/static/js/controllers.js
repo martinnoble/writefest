@@ -49,9 +49,13 @@ angular.module('myApp').controller('producerController',
 
     ProducerService.readData()
         .then(function() {
+        
+            var otherWeight = 0.2;
+        
             $scope.producerdata = ProducerService.getData();
             
             $scope.mode = 'status';
+            $scope.stats = 'off';
             
             $scope.scriptDetail = function(script){
             
@@ -59,20 +63,18 @@ angular.module('myApp').controller('producerController',
                 $scope.activeScript = script;
                 $scope.activeComments = filterFilter($scope.producerdata.comments, {script_id: script.id}, true);
                 
-                console.log($scope.activeScript);
-                console.log($scope.activeComments);
             }
             
             $scope.greaterThan = function(prop, val){
-                console.log("greaterThan(" + prop + "," + val + ")");
                 return function(item){
                   return item[prop] > val;
                 }
             }
             
-            $scope.sortBy = 'name';
-            $scope.sortReverse = false;
+            $scope.sortBy = 'average';
+            $scope.sortReverse = true;
             $scope.authorMode = 'off';
+            
             
             for (j=0; j < $scope.producerdata.users.length; j++) {
                 user = $scope.producerdata.users[j];
@@ -83,52 +85,114 @@ angular.module('myApp').controller('producerController',
             
                 script = $scope.producerdata.scripts[i];
                 
-                console.log("script:");
-                console.log(script);
-                
-                script.total = 0;
+                script.ratingTotal = 0;
+                script.otherTotal = 0;
                 script.totalDuration = 0;
-                script.squareTotal = 0;
+                
                 script.ratings = 0;
+                script.others = 0;
+                script.durations = 0;
                 
                 for (j=0; j < $scope.producerdata.users.length; j++) {
                 
                     user = $scope.producerdata.users[j];
                 
-                    ratings = filterFilter($scope.producerdata.ratings, {script_id: script.id, user_id: user.id}, true);
+                    finalRatings = filterFilter($scope.producerdata.ratings, {script_id: script.id, user_id: user.id, question_id: $scope.producerdata.finalQId}, true);
                 
-                    console.log(ratings);
-                
-                    if (ratings.length > 0 && ratings[0].rating > 0) {
+                    if (finalRatings.length > 0 && finalRatings[0].rating > 0) {
                         user.total++;
-                        script.total += ratings[0].rating;
-                        script.squareTotal += (ratings[0].rating * ratings[0].rating);
+                        script.ratingTotal += finalRatings[0].rating;
                         script.ratings++;
+                    }
+                    
+                    otherRatings = filterFilter($scope.producerdata.ratings, {script_id: script.id, user_id: user.id}, true);
+                
+                    if (otherRatings.length > 0) {
+                        for (k=0; k < otherRatings.length; k++) {
+                            if (otherRatings[k].rating > 0 && otherRatings[k].question_id != $scope.producerdata.finalQId) {
+                                script.otherTotal += otherRatings[k].rating;
+                                script.others++;
+                            }
+                        }
                     }
                     
                     comments = filterFilter($scope.producerdata.comments, {script_id: script.id, user_id: user.id}, true);
                     
                     if (comments.length > 0) {
+                        script.durations++;
                         script.totalDuration += comments[0].duration;
                     }
                     
                 }
                 
-                if (script.ratings == 0) {
-                    script.average = 0;
-                    script.squareAverage = 0;
+                finalAverage = 0;
+                otherAverage = 0;
+                
+                if (script.durations == 0) {
                     script.averageDuration = 0;
                 } else {
-                    script.average = script.total / script.ratings;
-                    script.squareAverage = script.squareTotal / script.ratings;
-                    script.averageDuration = script.totalDuration / script.ratings;
+                    script.averageDuration = script.totalDuration / script.durations;
                 }
                 
+                if (script.ratings == 0) {
+                    finalAverage = 0;
+                    
+                } else {
+                    finalAverage = script.ratingTotal / script.ratings;
+                }
+                
+                if (script.others == 0) {
+                    otherAverage = 0;
+                } else {
+                    otherAverage = script.otherTotal / script.others;
+                }
+
+                script.average = finalAverage;
+                    
+                sumOfSquareRatingDifs = 0;
+                sumOfSquareDurDifs = 0;
+                
+                for (j=0; j < $scope.producerdata.users.length; j++) {
+            
+                    user = $scope.producerdata.users[j];
+            
+                    
+                    finalRatings = filterFilter($scope.producerdata.ratings, {script_id: script.id, user_id: user.id, question_id: $scope.producerdata.finalQId}, true);
+                
+                    if (finalRatings.length > 0 && finalRatings[0].rating > 0) {
+                        sumOfSquareRatingDifs += Math.pow(finalRatings[0].rating - finalAverage, 2);
+                    }
+                    
+                    otherRatings = filterFilter($scope.producerdata.ratings, {script_id: script.id, user_id: user.id}, true);
+                
+                    if (otherRatings.length > 0) {
+                        for (k=0; k < otherRatings.length; k++) {
+                            if (otherRatings[k].rating > 0 && otherRatings[k].question_id != $scope.producerdata.finalQId) {
+                                sumOfSquareRatingDifs += Math.pow(finalRatings[0].rating - otherAverage, 2);
+                            }
+                        }
+                    }
+                    
+                    
+                    ratings = filterFilter($scope.producerdata.ratings, {script_id: script.id, user_id: user.id}, true);
+            
+                    if (ratings.length > 0 && ratings[0].rating > 0) {
+                        sumOfSquareRatingDifs += Math.pow(ratings[0].rating - script.average, 2);       
+                    }
+                
+                    comments = filterFilter($scope.producerdata.comments, {script_id: script.id, user_id: user.id}, true);
+                
+                    if (comments.length > 0) {
+                        sumOfSquareDurDifs += Math.pow(comments[0].duration - script.averageDuration, 2);
+                    }
+                }
+                
+                script.ratingSD = Math.sqrt(sumOfSquareRatingDifs / (script.ratings + script.others) );
+                script.durationSD = Math.sqrt(sumOfSquareDurDifs / script.durations);
+                    
+                script.average += (otherAverage * otherWeight);
+                
             }
-            
-            console.log($scope.producerdata);
-            
-            
             
         })
         //handle non-admin user
@@ -151,25 +215,17 @@ angular.module('myApp').controller('ratingController',
             
             $scope.pageTitle = "Rate";
             
-            
-            
-            console.log($scope.ratingdata.ratings);
-            
+             
             qType2 = filterFilter($scope.ratingdata.questions, {type: 2})[0];
 
-            console.log(qType2);
-            
+             
             for (i=0; i < $scope.ratingdata.scripts.length; i++) {
             
                 script = $scope.ratingdata.scripts[i];
-                console.log("script:");
-                console.log(script);
                 
                 notSetFinalRatings = filterFilter($scope.ratingdata.ratings, {question_id: qType2.id, script_id: script.id, rating: 0}, true);
                 allRatings = filterFilter($scope.ratingdata.ratings, {script_id: script.id}, true);
                 
-                console.log("not final: " + notSetFinalRatings.length);
-                console.log("all: " + allRatings.length);
                 
                 if (notSetFinalRatings.length == 0 && allRatings.length > 0) {
                     script.rated = 'full';
@@ -192,16 +248,11 @@ angular.module('myApp').controller('ratingController',
             
                 $scope.currentRating = {};
             
-                console.log(filterFilter($scope.ratingdata.ratings, {script_id: script}))
-            
                 for (i=0; i < $scope.ratingdata.questions.length; i++) {
                 
                     questionId = $scope.ratingdata.questions[i].id;
                 
                     ratings = filterFilter($scope.ratingdata.ratings, {question_id: questionId, script_id: script}, true);
-
-                    console.log("Question " + questionId);
-                    console.log(ratings);
 
                     ratingVal = 0;
                     if (ratings.length) {
@@ -218,9 +269,7 @@ angular.module('myApp').controller('ratingController',
                     $scope.currentRating['feedback'] = selectedComments.feedback;
                     $scope.currentRating['duration'] = selectedComments.duration;
                 }
-                console.log($scope.currentRating);
-
-            
+                
             }
             
             $scope.saveRating = function() {
@@ -245,9 +294,7 @@ angular.module('myApp').controller('ratingController',
                 $scope.currentScript = null;
                 $scope.pageTitle = "Rate";
             }
-            
            
-            console.log($scope.ratingdata);
         })
         //handle non-admin user
         .catch(function() {
@@ -276,8 +323,6 @@ angular.module('myApp').controller('scriptController',
                     }
                 }
              
-                console.log($scope.filterBy);
-                
             }
             
             
@@ -305,8 +350,6 @@ angular.module('myApp').controller('scriptController',
             
             $scope.update = function(data, action){
             
-                console.log(data);
-            
                 if (!data.file) {
                     
                     ScriptService.update(data, action)
@@ -330,10 +373,7 @@ angular.module('myApp').controller('scriptController',
                     data.file.upload.then(function (response) {
                       $timeout(function () {
                         data.file.result = response.data;
-                        console.log("Upload complete");
-                        console.log(data.file);
-        
-                
+                       
                         data.tempfilename = data.file.result.filename;
                         data.filename = data.file.name;
                 
@@ -365,7 +405,6 @@ angular.module('myApp').controller('scriptController',
                     
             }
             
-            console.log($scope.scriptdata);
         })
         //handle non-admin user
         .catch(function() {
@@ -471,7 +510,6 @@ angular.module('myApp').controller('adminController',
                     
             }
             
-            console.log($scope.admindata);
         })
         //handle non-admin user
         .catch(function() {

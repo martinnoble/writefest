@@ -195,7 +195,6 @@ angular.module('myApp').factory('AdminService',
     
     function update(type, data, action) {
         // create a new instance of deferred
-        console.log(action);
         var deferred = $q.defer();
         $http.post('/api/admin/' + type, {action: action, data: data})
             .success(function (data, status) {

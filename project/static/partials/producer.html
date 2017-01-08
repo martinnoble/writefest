@@ -74,6 +74,7 @@
     
 </div>
 
+
 <div class="row prodTable" ng-show="mode=='status'">
     <div class="col-xs-12">
         <h4>Rating status</h4>
@@ -81,13 +82,22 @@
         <form class="">
             <div class="row">    
                  
-                <div class="form-group col-sm-12">
+                <div class="form-group col-sm-6">
                     <label for="filterAuthor">Author Info:</label>
                     <select id="filterAuthor" class="form-control" 
                             ng-model="authorMode">
                         <option value="off">Off</option>
                         <option value="rating">Rating</option>
                         <option value="duration">Duration</option>
+                    </select>
+                </div>
+                
+                <div class="form-group col-sm-6">
+                    <label for="filterAuthor">Stats:</label>
+                    <select id="filterAuthor" class="form-control" 
+                            ng-model="stats">
+                        <option value="on">On</option>
+                        <option value="off">Off</option>
                     </select>
                 </div>
                 
@@ -98,12 +108,6 @@
             <thead>
             
                 <tr>
-                    <th>
-                
-                </tr>
-            
-                <tr>
-                    
                 
                     <th>
                         <a href="" ng-click="sortBy = 'name'; sortReverse = !sortReverse">
@@ -137,8 +141,23 @@
                         </a>
                     </th>
                     
-                    <th ng-repeat="user in producerdata.users" ng-hide="authorMode == 'off'">{{ user.name }}</th>
+                    <th ng-show="stats == 'on'">
+                        <a href="" ng-click="sortBy = 'ratingSD'; sortReverse = !sortReverse">
+                            Rating Spread
+                            <span ng-show="sortBy == 'ratingSD' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortBy == 'ratingSD' && sortReverse" class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
                     
+                    <th ng-show="stats == 'on'">
+                        <a href="" ng-click="sortBy = 'durationSD'; sortReverse = !sortReverse">
+                            Duration Spread
+                            <span ng-show="sortBy == 'durationSD' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortBy == 'durationSD' && sortReverse" class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                    
+                    <th ng-repeat="user in producerdata.users" ng-hide="authorMode == 'off'">{{ user.name }}</th>
                     
                 </tr>
             </thead>
@@ -148,10 +167,15 @@
                     <th>Rating Count</th>
                     <td></td>
                     <td></td>
-                                   
-                    <th ng-repeat="user in producerdata.users">
+                    
+                    
+                    <td ng-show="stats == 'on'"></td>
+                    <td ng-show="stats == 'on'"></td>
+                    
+                    <th ng-repeat="user in producerdata.users" class="text-xs-center">
                         {{ user.total }}
                     </th>
+                    
                     
                 </tr>
             
@@ -161,22 +185,30 @@
                     
                     </td>
                     
-                    <th>
-                        {{ script.average }}
+                    <th class="text-xs-center">
+                        {{ script.average | number:2 }}
                     </th>
                     
-                    <th>
-                        {{ script.averageDuration }}
+                    <th class="text-xs-center">
+                        {{ script.averageDuration | number:1 }}
                     </th>
                     
-                    <th ng-show="authorMode == 'off'">
+                    <th ng-show="authorMode == 'off'" class="text-xs-center">
                         {{ script.ratings }}
                     </th>
                     
-                    <td ng-repeat="user in producerdata.users" ng-hide="authorMode == 'off'">
+                    <td ng-show="stats == 'on'" class="text-xs-center">
+                        {{ script.ratingSD | number:2 }}
+                    </td>
+                    
+                    <td ng-show="stats == 'on'" class="text-xs-center">
+                        {{ script.durationSD | number:2 }}
+                    </td>
+                    
+                    <td ng-repeat="user in producerdata.users" ng-hide="authorMode == 'off'" class="text-xs-center">
                         <div ng-show="authorMode == 'rating'">
-                            <span class="fa fa-check" 
-                                ng-init="count = ( producerdata.ratings | filter:{script_id:script.id, user_id:user.id}:true | filter:greaterThan('rating',0) ).length; rating = ( producerdata.ratings | filter:{script_id:script.id, user_id:user.id}:true )[0]" 
+                            <span class="rated" 
+                                ng-init="count = ( producerdata.ratings | filter:{script_id:script.id, user_id:user.id, question_id:producerdata.finalQId}:true | filter:greaterThan('rating',0) ).length; rating = ( producerdata.ratings | filter:{script_id:script.id, user_id:user.id, question_id:producerdata.finalQId}:true )[0]" 
                                 ng-show="count > 0">
                                 {{ (answersType2 | filter:{id:rating.rating})[0].answer }}
                             </span>
@@ -185,7 +217,7 @@
                             </span>
                         </div>
                         <div ng-show="authorMode == 'duration'">
-                            <span class="fa fa-check"
+                            <span class="rated"
                                 ng-init="duration = (producerdata.comments | filter:{script_id: script.id, user_id: user.id})[0].duration"
                                 ng-show="duration > 0">
                                 {{ duration }}
@@ -195,6 +227,7 @@
                             </span>
                         </div>
                     </td>
+                    
                     
                     
                 </tr>
