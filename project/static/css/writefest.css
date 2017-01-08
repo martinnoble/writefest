@@ -57,6 +57,14 @@ table .btn, .ratingData .btn {
     padding-bottom: 10px;
 }
 
+.prodTable .fa-check {
+    color: green;
+}
+
+.prodTable .fa-times {
+    color: red;
+}
+
 @media (min-width: 768px) {
     .row-striped:nth-of-type(odd) {
       background-color: #efefef;

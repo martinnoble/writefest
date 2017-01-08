@@ -152,13 +152,14 @@ def users():
             user.name = user_data['name']
             user.email = user_data['email']
             user.user_type = user_data['user_type']
+            user.can_rate = user_data['can_rate']
             if user_data['password'] != "not-changed":
                 user.password = bcrypt.generate_password_hash(user_data['password'])
             
         
         elif action == 'add':
             print("Adding user")
-            db.session.add(User(name=user_data['name'], email=user_data['email'], user_type=user_data['user_type'], password=user_data['password']))
+            db.session.add(User(name=user_data['name'], email=user_data['email'], user_type=user_data['user_type'], password=user_data['password'], can_rate=user_data['can_rate']))
         
         elif action == 'delete':
             print("Deleting user")
@@ -363,19 +364,27 @@ def rating():
         print("Saving comments")
         comment = Comments.query.filter_by(user_id=session['userid'], script_id=script).first()
         
+        notes = ""
+        feedback = ""
+        if 'notes' in ratingdata:
+            notes = ratingdata['notes']
+        if 'feedback' in ratingdata:    
+            feedback = ratingdata['feedback']
+        
         if comment:
             print("old: " + str(comment))
-            comment.notes = ratingdata['notes']
-            comment.feedback = ratingdata['feedback']
+            comment.notes = notes
+            comment.feedback = feedback
+            comment.duration = ratingdata['duration']
         else:
-            comment = Comments(user=session['userid'], script=script, notes=ratingdata['notes'], feedback=ratingdata['feedback'])
+            comment = Comments(user=session['userid'], script=script, notes=notes, feedback=feedback, duration=ratingdata['duration'])
             db.session.add(comment)
         print("new: " + str(comment))
         
         for key in ratingdata:
             print("Question: " + key);
         
-            if key in ['notes', 'feedback']:
+            if key in ['notes', 'feedback', 'duration']:
                 #skip them - handled seperately
                 pass
                 
@@ -403,4 +412,40 @@ def rating():
         
     return jsonify({'result': result})
 
+
+@app.route('/api/producer')
+def producer():
+    result = False
+
+    if session['user_type'] not in ['admin', 'producer']:
+        return jsonify({'result': False})
+
+    users = User.query.filter_by(can_rate = True).all()
+
+    finalQId = Question.query.filter_by(type = 2).first().id
+
+    ratings = Rating.query.filter_by(question_id = finalQId).all()
+
+    curSeason = Season.query.order_by('-id').first()
+
+    ratableStatuses = ScriptStatus.query.filter_by(ratable = True).all()
+    
+    comments = Comments.query.all();
+
+    statusList = []
+    for status in ratableStatuses:
+        statusList.append(status.id)
+
+    scripts = Script.query.filter_by(season = curSeason.id).filter(Script.status.in_(statusList)).all()
+
+
+    result = {
+                'result': True, 
+                'users': [ob.dump() for ob in users],
+                'ratings': [ob.dump() for ob in ratings],
+                'scripts': [ob.dump() for ob in scripts],
+                'comments': [ob.dump() for ob in comments]
+            }
+    
+    return jsonify(result)
         

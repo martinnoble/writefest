@@ -1,3 +1,41 @@
+angular.module('myApp').factory('ProducerService',
+  ['$q', '$timeout', '$http',
+  function ($q, $timeout, $http) {
+
+    var producerdata = {};
+
+    // return available functions for use in controllers
+    return ({
+      readData: readData,
+      getData: getData
+    });
+
+    function readData() {
+        // create a new instance of deferred
+        var deferred = $q.defer();
+
+        $http.get('/api/producer')
+            // handle success
+            .success(function (data) {
+                producerdata = data;
+                deferred.resolve();
+            })
+            // handle error
+            .error(function (data) {
+                producerdata = {};
+                deferred.reject();
+            });
+
+        // return promise object
+        return deferred.promise;
+    }
+    
+    function getData() {
+        return producerdata;
+    }
+}]);
+
+
 angular.module('myApp').factory('RatingService',
   ['$q', '$timeout', '$http',
   function ($q, $timeout, $http) {

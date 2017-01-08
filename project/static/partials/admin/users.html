@@ -10,6 +10,7 @@
                 <th>Email</th>
                 <th>Password</th>
                 <th>User Type</th>
+                <th>Can Rate?</th>
                 <th></th>
             </tr>
             <tr ng-repeat="user in admindata.users">
@@ -34,6 +35,16 @@
                     </div>
                 </td>
                 <td>
+                    <div ng-hide="editingData[user.id]">{{ user.can_rate }}</div>
+                    <div ng-show="editingData[user.id]">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" ng-model="user.can_rate">
+                          </label>
+                        </div>
+                    </div>
+                </td>
+                <td>
                     <button class="btn btn-outline-secondary" ng-hide="editingData[user.id]" ng-click="modify(user)">Modify</button>
                     <button class="btn btn-outline-primary" ng-show="editingData[user.id]" ng-click="cancel(user)">Cancel</button>
                     <button class="btn btn-outline-success" ng-show="editingData[user.id]" ng-click="update('users', user, 'update')">Save</button>
@@ -49,6 +60,14 @@
                 <td>
                     <select class="form-control" ng-model="newUser.user_type" ng-options="item.id as item.type for item in admindata.usertypes">
                     </select>
+                </td>
+                <td>
+                    <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" ng-model="newUser.can_rate">
+                          </label>
+                        </div>
+                    </div>
                 </td>
                 <td>
                     <button class="btn btn-outline-success" ng-click="update('users', newUser, 'add')">Save</button> 

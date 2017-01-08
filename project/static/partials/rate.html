@@ -1,5 +1,18 @@
 <h1>{{pageTitle}}</div></h1>
 
+<div class="row" ng-hide="currentScript">
+    <div class="col-xs-12">
+        <table class="table table-striped mobileTable">
+            <thead>
+                <tr>
+                    <td ng-repeat="status in ratingStatus">
+                        {{status.description}}: {{ (ratingdata.scripts | filter:{rated:status.id}).length }}
+                    </td>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
 
 <div class="row" ng-hide="currentScript" ng-repeat="status in ratingStatus">
     
@@ -92,6 +105,16 @@
                     </td>
                     <td>
                         <textarea class="form-control" type="textarea" ng-model="currentRating['feedback']" rows="4"/>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        Estimated duration<br/>
+                        (minutes)
+                    </td>
+                    <td>
+                        <input class="form-control" type="number" ng-model="currentRating['duration']" min="1" max="99"/>
                     </td>
                 </tr>
 

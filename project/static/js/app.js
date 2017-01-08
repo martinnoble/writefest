@@ -84,7 +84,29 @@ myApp.run(function ($rootScope, $location, $route, AuthService) {
       .then(function(){
       
         $rootScope.user = {admin: AuthService.isAdmin(), loggedin: AuthService.isLoggedIn(), user: AuthService.isUser(), producer: AuthService.isProducer(), author: AuthService.isAuthor()};
-      
+        
+        $rootScope.ratingStatus = [
+                        { 'id' : 'none', 'description' : 'Not Rated'}, 
+                        { 'id' : 'partial', 'description' : 'Partial Rating'},
+                        { 'id' : 'full', 'description' : 'Fully Rated'}
+                        ];
+            
+        $rootScope.answersType1 = [
+                   { 'id': 4, 'answer':'Excellent' },
+                   { 'id': 3, 'answer':'Good' },
+                   { 'id': 2, 'answer':'Satisfactory' },
+                   { 'id': 1, 'answer':'Needs Work' },
+                   { 'id': 0, 'answer':'N/A' }
+                ];
+    
+        $rootScope.answersType2 = [
+                   { 'id': 4, 'answer':'Definitely' },
+                   { 'id': 3, 'answer':'Probably' },
+                   { 'id': 2, 'answer':'Maybe' },
+                   { 'id': 1, 'answer':'No' },
+                   { 'id': 0, 'answer':'Not Rated' }
+                    ];
+        
         console.log($rootScope.user);
       
         $rootScope.username = AuthService.getUserName();

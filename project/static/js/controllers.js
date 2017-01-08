@@ -44,11 +44,98 @@ angular.module('myApp').controller('authorController',
 }]);
 
 angular.module('myApp').controller('producerController',
-  ['$scope', '$location', 'AuthService',
-  function ($scope, $location, AuthService) {
+  ['$scope', '$location', 'ProducerService', 'filterFilter',
+  function ($scope, $location, ProducerService, filterFilter) {
 
-    
-
+    ProducerService.readData()
+        .then(function() {
+            $scope.producerdata = ProducerService.getData();
+            
+            $scope.mode = 'status';
+            
+            $scope.scriptDetail = function(script){
+            
+                $scope.mode = 'script';
+                $scope.activeScript = script;
+                $scope.activeComments = filterFilter($scope.producerdata.comments, {script_id: script.id}, true);
+                
+                console.log($scope.activeScript);
+                console.log($scope.activeComments);
+            }
+            
+            $scope.greaterThan = function(prop, val){
+                console.log("greaterThan(" + prop + "," + val + ")");
+                return function(item){
+                  return item[prop] > val;
+                }
+            }
+            
+            $scope.sortBy = 'name';
+            $scope.sortReverse = false;
+            $scope.authorMode = 'off';
+            
+            for (j=0; j < $scope.producerdata.users.length; j++) {
+                user = $scope.producerdata.users[j];
+                user.total = 0;
+            }
+            
+            for (i=0; i < $scope.producerdata.scripts.length; i++) {
+            
+                script = $scope.producerdata.scripts[i];
+                
+                console.log("script:");
+                console.log(script);
+                
+                script.total = 0;
+                script.totalDuration = 0;
+                script.squareTotal = 0;
+                script.ratings = 0;
+                
+                for (j=0; j < $scope.producerdata.users.length; j++) {
+                
+                    user = $scope.producerdata.users[j];
+                
+                    ratings = filterFilter($scope.producerdata.ratings, {script_id: script.id, user_id: user.id}, true);
+                
+                    console.log(ratings);
+                
+                    if (ratings.length > 0 && ratings[0].rating > 0) {
+                        user.total++;
+                        script.total += ratings[0].rating;
+                        script.squareTotal += (ratings[0].rating * ratings[0].rating);
+                        script.ratings++;
+                    }
+                    
+                    comments = filterFilter($scope.producerdata.comments, {script_id: script.id, user_id: user.id}, true);
+                    
+                    if (comments.length > 0) {
+                        script.totalDuration += comments[0].duration;
+                    }
+                    
+                }
+                
+                if (script.ratings == 0) {
+                    script.average = 0;
+                    script.squareAverage = 0;
+                    script.averageDuration = 0;
+                } else {
+                    script.average = script.total / script.ratings;
+                    script.squareAverage = script.squareTotal / script.ratings;
+                    script.averageDuration = script.totalDuration / script.ratings;
+                }
+                
+            }
+            
+            console.log($scope.producerdata);
+            
+            
+            
+        })
+        //handle non-admin user
+        .catch(function() {
+            //redirect back to home
+            $location.path('/');
+        });
 }]);
 
 angular.module('myApp').controller('ratingController',
@@ -64,27 +151,7 @@ angular.module('myApp').controller('ratingController',
             
             $scope.pageTitle = "Rate";
             
-            $scope.ratingStatus = [
-                        { 'id' : 'none', 'description' : 'Not Rated'}, 
-                        { 'id' : 'partial', 'description' : 'Partial Rating'},
-                        { 'id' : 'full', 'description' : 'Fully Rated'}
-                        ];
             
-            $scope.answersType1 = [
-                       { 'id': 4, 'answer':'Excellent' },
-                       { 'id': 3, 'answer':'Good' },
-                       { 'id': 2, 'answer':'Satisfactory' },
-                       { 'id': 1, 'answer':'Needs Work' },
-                       { 'id': 0, 'answer':'N/A' }
-                    ];
-            
-            $scope.answersType2 = [
-                       { 'id': 4, 'answer':'Definitely' },
-                       { 'id': 3, 'answer':'Probably' },
-                       { 'id': 2, 'answer':'Maybe' },
-                       { 'id': 1, 'answer':'No' },
-                       { 'id': 0, 'answer':'Not Rated' }
-                    ];
             
             console.log($scope.ratingdata.ratings);
             
@@ -149,6 +216,7 @@ angular.module('myApp').controller('ratingController',
                 if (selectedComments) {
                     $scope.currentRating['notes'] = selectedComments.notes;
                     $scope.currentRating['feedback'] = selectedComments.feedback;
+                    $scope.currentRating['duration'] = selectedComments.duration;
                 }
                 console.log($scope.currentRating);
 

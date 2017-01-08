@@ -15,32 +15,36 @@ class Comments(db.Model):
     script_id = db.Column(db.Integer, db.ForeignKey('script.id'), nullable=False)
     notes = db.Column(db.String(1024))
     feedback = db.Column(db.String(1024))
+    duration = db.Column(db.Integer)
     
     users = db.relationship("User")
     scripts = db.relationship("Script")
     
-    def __init__(self, user, script, notes = '', feedback = ''):
+    def __init__(self, user, script, duration, notes = '', feedback = ''):
         self.user_id = user
         self.script_id = script
         self.notes = notes
         self.feedback = feedback
+        self.duration = duration
 
     def dump(self):
         return {'id': self.id, 
                 'user_id': self.user_id,
                 'script_id': self.script_id,
                 'notes': self.notes,
-                'feedback': self.feedback
+                'feedback': self.feedback,
+                'duration': self.duration
                 }
     
     def dump_comment(self):
         return {'id': self.id,
                 'script_id': self.script_id,
-                'feedback': self.feedback
+                'feedback': self.feedback,
+                'duration': self.duration
                 }
     
     def __repr__(self):
-        return '<Comments {0}: User:{1} Script:{2} Notes:{3}, Feedback:{4}>'.format(self.id, self.user_id, self.script_id, self.notes, self.feedback)
+        return '<Comments {0}: User:{1} Script:{2} Notes:{3}, Feedback:{4}, Duration:{5}>'.format(self.id, self.user_id, self.script_id, self.notes, self.feedback, self.duration)
 
 
 class Rating(db.Model):
@@ -185,14 +189,16 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
     user_type = db.Column(db.Integer, nullable=False, default=1)
+    can_rate = db.Column(db.Boolean, default=False)
     
 
-    def __init__(self, name, email, password=str(uuid.uuid4()), user_type=1):
+    def __init__(self, name, email, password=str(uuid.uuid4()), user_type=1, can_rate = False):
         self.name = name
         self.email = email
         self.password = bcrypt.generate_password_hash(password)
         self.registered_on = datetime.datetime.now()
         self.user_type = user_type
+        self.can_rate = can_rate
 
     def is_authenticated(self):
         return True
@@ -213,11 +219,12 @@ class User(db.Model):
                 'registered_on': self.registered_on,
                 'user_type': self.user_type,
                 'user_type_name': UserType.query.filter_by(id=self.user_type).first().type,
-                'password' : 'not-changed'
+                'password' : 'not-changed',
+                'can_rate' : self.can_rate
                 }
 
     def __repr__(self):
-        return "<User {0}: {1} | {2}>".format(self.id, self.name, self.email)
+        return "<User {0}: {1} | {2} - Rate:{3}>".format(self.id, self.name, self.email, self.can_rate)
 
 class Question(db.Model):
 
