@@ -421,6 +421,8 @@ def producer():
         return jsonify({'result': False})
 
     users = User.query.filter_by(can_rate = True).all()
+    
+    authors = User.query.filter_by(user_type = 1).all()
 
     finalQId = Question.query.filter_by(type = 2).first().id
 
@@ -445,7 +447,8 @@ def producer():
                 'ratings': [ob.dump() for ob in ratings],
                 'scripts': [ob.dump() for ob in scripts],
                 'comments': [ob.dump() for ob in comments],
-                'finalQId': finalQId
+                'finalQId': finalQId,
+                'authors': [ob.dump() for ob in authors]
             }
     
     return jsonify(result)

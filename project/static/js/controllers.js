@@ -44,8 +44,8 @@ angular.module('myApp').controller('authorController',
 }]);
 
 angular.module('myApp').controller('producerController',
-  ['$scope', '$location', 'ProducerService', 'filterFilter',
-  function ($scope, $location, ProducerService, filterFilter) {
+  ['$scope', '$location', 'ProducerService', 'filterFilter', '$filter',
+  function ($scope, $location, ProducerService, filterFilter, $filter) {
 
     ProducerService.readData()
         .then(function() {
@@ -56,6 +56,11 @@ angular.module('myApp').controller('producerController',
             
             $scope.mode = 'status';
             $scope.stats = 'off';
+            $scope.ratingInfo = 'off';
+            $scope.authorInfo = 'off';
+            $scope.sortBy = 'average';
+            $scope.sortReverse = true;
+            
             
             $scope.scriptDetail = function(script){
             
@@ -71,9 +76,7 @@ angular.module('myApp').controller('producerController',
                 }
             }
             
-            $scope.sortBy = 'average';
-            $scope.sortReverse = true;
-            $scope.authorMode = 'off';
+            
             
             
             for (j=0; j < $scope.producerdata.users.length; j++) {
@@ -190,8 +193,29 @@ angular.module('myApp').controller('producerController',
                 script.ratingSD = Math.sqrt(sumOfSquareRatingDifs / (script.ratings + script.others) );
                 script.durationSD = Math.sqrt(sumOfSquareDurDifs / script.durations);
                     
-                script.average += (otherAverage * otherWeight);
                 
+                script.average = (((script.average / 3) * (1-otherWeight)) + ((otherAverage / 4) * otherWeight)) * 10;
+                
+            }
+        
+            $scope.producerdata.scripts = $filter('orderBy')($scope.producerdata.scripts, 'average', true);
+            for (i=0; i < $scope.producerdata.scripts.length; i++) {
+            
+                script = $scope.producerdata.scripts[i];
+                script.rank = i+1;
+                script.rankequal = false;
+                
+                if (i > 0){
+                    prevscript = $scope.producerdata.scripts[i-1];
+                    
+                    if ($filter('number')(script.average, 2) == $filter('number')(prevscript.average, 2)) {
+                        prevscript.rankequal = true;
+                        script.rankequal = true;
+                        script.rank = prevscript.rank;
+                    }   
+                }
+                
+                console.log(script.average);
             }
             
         })
@@ -254,7 +278,7 @@ angular.module('myApp').controller('ratingController',
                 
                     ratings = filterFilter($scope.ratingdata.ratings, {question_id: questionId, script_id: script}, true);
 
-                    ratingVal = 0;
+                    ratingVal = null;
                     if (ratings.length) {
                         ratingVal = ratings[0].rating;
                     } 

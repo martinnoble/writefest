@@ -61,14 +61,12 @@ def create_data():
     db.session.add(Season(year=2017, start_date=datetime.date(2016, 11, 1), end_date=datetime.date(2017, 5, 1)))
     db.session.add(Question(question='Should we perform it?', type=2))
     db.session.add(Question(question='Opening'))
-    db.session.add(Question(question='Dialogue'))
+    db.session.add(Question(question='Standard of Dialogue'))
     db.session.add(Question(question='Characters'))
-    db.session.add(Question(question='Humour'))
-    db.session.add(Question(question='Conflict'))
-    db.session.add(Question(question='Dramatic content'))
+    
     db.session.add(Question(question='Storyline'))
-    db.session.add(Question(question='Standard of writing', description='(not spelling and grammar)'))
-    db.session.add(Question(question='How well does it fulfil its intended style?'))
+    
+    db.session.add(Question(question='How well does it fulfil its intended style?', description='(eg Comedy, Drama etc)'))
     db.session.add(Question(question='How well did it engage you?'))
     db.session.add(Question(question='Originality'))
     db.session.add(Question(question='Ending'))
@@ -94,10 +92,10 @@ def create_data():
         
         for user in users:
             if random.randint(0, 100) < 95:        
-                db.session.add(Rating(question=1, user=user, script=script, rating=random.randint(0, 4)))
+                db.session.add(Rating(question=1, user=user, script=script, rating=random.randint(0, 3)))
                 db.session.add(Comments(user=user, script=script, duration=random.randint(2, 20), notes=random.choice(sentences), feedback=random.choice(sentences) ))    
                 for question in range(2,15):
-                    db.session.add(Rating(question=question, user=user, script=script, rating=random.randint(0, 5)))
+                    db.session.add(Rating(question=question, user=user, script=script, rating=random.randint(0, 4)))
     
     db.session.commit()
 

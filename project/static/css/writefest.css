@@ -69,6 +69,9 @@ table .btn, .ratingData .btn {
     white-space: nowrap;
 }
 
+.no-wrap {
+    white-space: nowrap;
+}
 
 @media (min-width: 768px) {
     .row-striped:nth-of-type(odd) {

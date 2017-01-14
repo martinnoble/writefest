@@ -82,22 +82,31 @@
         <form class="">
             <div class="row">    
                  
-                <div class="form-group col-sm-6">
-                    <label for="filterAuthor">Author Info:</label>
-                    <select id="filterAuthor" class="form-control" 
-                            ng-model="authorMode">
+                <div class="form-group col-md-4">
+                    <label for="filterRating">Rating Info:</label>
+                    <select id="filterRating" class="form-control" 
+                            ng-model="ratingInfo">
                         <option value="off">Off</option>
                         <option value="rating">Rating</option>
                         <option value="duration">Duration</option>
                     </select>
                 </div>
                 
-                <div class="form-group col-sm-6">
-                    <label for="filterAuthor">Stats:</label>
-                    <select id="filterAuthor" class="form-control" 
+                <div class="form-group col-md-4">
+                    <label for="filterStats">Stats:</label>
+                    <select id="filterStats" class="form-control" 
                             ng-model="stats">
-                        <option value="on">On</option>
                         <option value="off">Off</option>
+                        <option value="on">On</option>
+                    </select>
+                </div>
+                
+                <div class="form-group col-md-4">
+                    <label for="filterAuthor">Author Name:</label>
+                    <select id="filterAuthor" class="form-control" 
+                            ng-model="authorInfo">
+                        <option value="off">Off</option>
+                        <option value="on">On</option>
                     </select>
                 </div>
                 
@@ -117,6 +126,18 @@
                         </a>
                     </th>
                     
+                    <th ng-hide="authorInfo == 'off'">
+                        Author
+                    </th>
+                    
+                    <th ng-show="ratingInfo == 'off'">
+                        <a href="" ng-click="sortBy = 'rank'; sortReverse = !sortReverse">
+                            Ranking
+                            <span ng-show="sortBy == 'rank' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortBy == 'rank' && sortReverse" class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                    
                     <th>
                         <a href="" ng-click="sortBy = 'average'; sortReverse = !sortReverse">
                             Rating
@@ -125,7 +146,7 @@
                         </a>
                     </th>
                     
-                    <th>
+                    <th ng-show="ratingInfo != 'rating'">
                         <a href="" ng-click="sortBy = 'averageDuration'; sortReverse = !sortReverse">
                             Duration
                             <span ng-show="sortBy == 'averageDuration' && !sortReverse" class="fa fa-caret-down"></span>
@@ -133,7 +154,7 @@
                         </a>
                     </th>
                     
-                    <th ng-show="authorMode == 'off'">
+                    <th ng-show="ratingInfo == 'off'">
                         <a href="" ng-click="sortBy = 'ratings'; sortReverse = !sortReverse">
                             Count
                             <span ng-show="sortBy == 'ratings' && !sortReverse" class="fa fa-caret-down"></span>
@@ -157,20 +178,22 @@
                         </a>
                     </th>
                     
-                    <th ng-repeat="user in producerdata.users" ng-hide="authorMode == 'off'">{{ user.name }}</th>
+                    <th ng-repeat="user in producerdata.users" ng-hide="ratingInfo == 'off'">{{ user.name }}</th>
                     
                 </tr>
             </thead>
             
             <tbody>
-                <tr ng-show="authorMode == 'rating'">
+                <tr ng-show="ratingInfo == 'rating'">
                     <th>Rating Count</th>
-                    <td></td>
-                    <td></td>
                     
+                    <td ng-hide="authorInfo == 'off'"><!--author name--></td>
+                    <td ng-show="ratingInfo == 'off'"><!-- ranking --></td>
+                    <td><!-- rating --></td>
+                    <td ng-show="ratingInfo != 'rating'"><!-- duration --></td>
                     
-                    <td ng-show="stats == 'on'"></td>
-                    <td ng-show="stats == 'on'"></td>
+                    <td ng-show="stats == 'on'"><!-- stats --></td>
+                    <td ng-show="stats == 'on'"><!-- stats --></td>
                     
                     <th ng-repeat="user in producerdata.users" class="text-xs-center">
                         {{ user.total }}
@@ -182,18 +205,25 @@
                 <tr ng-repeat="script in producerdata.scripts  | orderBy:sortBy:sortReverse">
                     <td>
                         <a href="" ng-click="scriptDetail(script)">{{ script.name }}</a>
-                    
                     </td>
+                    
+                    <td class="no-wrap" ng-hide="authorInfo == 'off'">
+                        {{ (producerdata.authors | filter:{id:script.author})[0].name }}
+                    </td>
+                    
+                    <th class="text-xs-center" ng-show="ratingInfo == 'off'">
+                        {{ script.rank }}<span ng-show="script.rankequal">=</span>
+                    </th>
                     
                     <th class="text-xs-center">
                         {{ script.average | number:2 }}
                     </th>
                     
-                    <th class="text-xs-center">
+                    <th class="text-xs-center" ng-show="ratingInfo != 'rating'">
                         {{ script.averageDuration | number:1 }}
                     </th>
                     
-                    <th ng-show="authorMode == 'off'" class="text-xs-center">
+                    <th ng-show="ratingInfo == 'off'" class="text-xs-center">
                         {{ script.ratings }}
                     </th>
                     
@@ -205,8 +235,8 @@
                         {{ script.durationSD | number:2 }}
                     </td>
                     
-                    <td ng-repeat="user in producerdata.users" ng-hide="authorMode == 'off'" class="text-xs-center">
-                        <div ng-show="authorMode == 'rating'">
+                    <td ng-repeat="user in producerdata.users" ng-hide="ratingInfo == 'off'" class="text-xs-center">
+                        <div ng-show="ratingInfo == 'rating'">
                             <span class="rated" 
                                 ng-init="count = ( producerdata.ratings | filter:{script_id:script.id, user_id:user.id, question_id:producerdata.finalQId}:true | filter:greaterThan('rating',0) ).length; rating = ( producerdata.ratings | filter:{script_id:script.id, user_id:user.id, question_id:producerdata.finalQId}:true )[0]" 
                                 ng-show="count > 0">
@@ -216,7 +246,7 @@
                             <span class="fa fa-times" ng-show="count == 0">
                             </span>
                         </div>
-                        <div ng-show="authorMode == 'duration'">
+                        <div ng-show="ratingInfo == 'duration'">
                             <span class="rated"
                                 ng-init="duration = (producerdata.comments | filter:{script_id: script.id, user_id: user.id})[0].duration"
                                 ng-show="duration > 0">

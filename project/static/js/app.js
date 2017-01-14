@@ -92,19 +92,20 @@ myApp.run(function ($rootScope, $location, $route, AuthService) {
                         ];
             
         $rootScope.answersType1 = [
-                   { 'id': 4, 'answer':'Excellent' },
-                   { 'id': 3, 'answer':'Good' },
-                   { 'id': 2, 'answer':'Satisfactory' },
-                   { 'id': 1, 'answer':'Needs Work' },
-                   { 'id': 0, 'answer':'N/A' }
+                    { 'id': 4, 'answer':'Excellent' },
+                    { 'id': 3, 'answer':'Good' },
+                    { 'id': 2, 'answer':'Satisfactory' },
+                    { 'id': 1, 'answer':'Needs Work' },
+                    { 'id': 0, 'answer':'N/A' },
+                    { 'id': null, 'answer':'Not Rated' }
                 ];
     
         $rootScope.answersType2 = [
-                   { 'id': 4, 'answer':'Definitely' },
-                   { 'id': 3, 'answer':'Probably' },
-                   { 'id': 2, 'answer':'Maybe' },
-                   { 'id': 1, 'answer':'No' },
-                   { 'id': 0, 'answer':'Not Rated' }
+                   { 'id': 3, 'answer':'Definitely' },
+                   { 'id': 2, 'answer':'Probably' },
+                   { 'id': 1, 'answer':'Maybe' },
+                   { 'id': 0, 'answer':'No' },
+                   { 'id': null, 'answer':'Not Yet Rated' }
                     ];
 
         $rootScope.username = AuthService.getUserName();
