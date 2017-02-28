@@ -9,14 +9,15 @@ body {
 }
 
 
-input.ng-invalid {
-    background-color: #ffe6e6 !important;
-}
+
 input.ng-valid {
     background-color: #e6ffe6 !important;
 }
 input.ng-pristine {
     background-color: #e6faff !important;
+}
+input.ng-invalid {
+    background-color: #ffe6e6 !important;
 }
 
 form .progress {

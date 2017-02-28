@@ -117,7 +117,9 @@
             <thead>
             
                 <tr>
-                
+                    <th>
+                        ID
+                    </th>
                     <th>
                         <a href="" ng-click="sortBy = 'name'; sortReverse = !sortReverse">
                             Script
@@ -185,6 +187,7 @@
             
             <tbody>
                 <tr ng-show="ratingInfo == 'rating'">
+                    <td><!-- ID --></td>
                     <th>Rating Count</th>
                     
                     <td ng-hide="authorInfo == 'off'"><!--author name--></td>
@@ -203,6 +206,10 @@
                 </tr>
             
                 <tr ng-repeat="script in producerdata.scripts  | orderBy:sortBy:sortReverse">
+                    <td>
+                        {{ script.id }}
+                    </td>
+
                     <td>
                         <a href="" ng-click="scriptDetail(script)">{{ script.name }}</a>
                     </td>

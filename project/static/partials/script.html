@@ -1,3 +1,103 @@
+<!-- New Script Modal -->
+<div class="modal fade" id="modalNewScript" tabindex="-1" role="dialog" aria-labelledby="modalNewScriptTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalNewScriptTitle">Add Script</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="container-fluid">
+            <form name="newScriptForm">
+                <div class="row">
+                    <div class="col-md-4">
+                        Season:
+                    </div>
+                    <div class="col-md-8">
+                        <select class="form-control" ng-model="newScript.season" ng-options="item.id as item.year for item in scriptdata.seasons">
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        Status:
+                    </div>
+                    <div class="col-md-8">
+                        <select class="form-control" ng-model="newScript.status" ng-options="item.id as item.status for item in scriptdata.statuses">
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        Title:
+                    </div>
+                    <div class="col-md-8">
+                        <input class="form-control" name="scriptName" type="text" ng-model="newScript.name" required/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        Author:
+                    </div>
+                    <div class="col-md-8">
+                        <select class="form-control" ng-model="newScript.author" ng-options="item.id as item.name for item in scriptdata.authors">
+                        </select>
+                    </div>
+                </div>
+                <div class="row" ng-show="newScript.author == -1">
+                    <div class="col-md-4">
+                        Author Name:
+                    </div>
+                    <div class="col-md-8">
+                        <input class="form-control" type="text" ng-model="newScript.user_name" ng-required="newScript.author == -1">
+                    </div>
+                </div>
+                <div class="row" ng-show="newScript.author == -1">
+                    <div class="col-md-4">
+                        Author Email:
+                    </div>
+                    <div class="col-md-8">
+                        <Input class="form-control" type="email" ng-model="newScript.user_email" ng-required="newScript.author == -1">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        File
+                    </div>
+                    <div class="col-md-8">
+                        <input class="form-control-file" type="file" ngf-select ng-model="newScript.file" name="file"
+                             accept="application/pdf" ngf-max-size="10MB" ng-required="newScript.id == 0"
+                             ngf-model-invalid="errorFile">
+                        <i ng-show="myForm.file.$error.maxSize">File too large
+                          {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
+                        <button ng-click="newScript.file = null" ng-show="newScript.file" class="btn btn-outline-danger">Remove</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <span class="progress" ng-show="newScript.file.progress >= 0">
+                            <div style="width:{{newScript.file.progress}}%"
+                                ng-bind="newScript.file.progress + '%'"></div>
+                        </span>
+                    </div>
+                </div>
+
+              </div>
+          </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button ng-disabled="!newScriptForm.$valid" ng-show="newScript.id == 0" class="btn btn-outline-success" ng-click="update(newScript, 'add')">Save</button>
+        <button ng-disabled="!newScriptForm.$valid" ng-hide="newScript.id == 0" class="btn btn-outline-success" ng-click="update(newScript, 'update')">Save</button>
+        <button class="btn btn-outline-danger" ng-hide="newScript.id == 0" confirmed-click="update(newScript, 'delete')" ng-confirm-click="Are you sure?">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <h1>Producer - Scripts</h1>
 
 <div class="row">
@@ -36,7 +136,7 @@
             </div>
         </form>
         
-        <form name="myForm">
+
         <table class="table table-striped">
             <thead>
             <tr class="hidden-sm-down">
@@ -90,61 +190,13 @@
                     </a>
                 </th>
                 <th>
-                    <button ng-click="addScript = true" ng-hide="addScript" class="btn btn-outline-primary">Add</button>
-                    <button ng-click="addScript = false" ng-show="addScript" class="btn btn-outline-primary">Cancel</button>
+                    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#modalNewScript" ng-click="resetNewScript()">Add</button>
                 </th>
             </tr>
             </thead>
             
             <tbody>
-            
-            <tr ng-show="addScript">
-                
-                <td>New</td>
-                <td>
-                    <select class="form-control" ng-model="newScript.season" ng-options="item.id as item.year for item in scriptdata.seasons">
-                    </select>
-                </td>
-                <td>
-                    <select class="form-control" ng-model="newScript.status" ng-options="item.id as item.status for item in scriptdata.statuses">
-                    </select>
-                </td>
-                <td>
-                    <input class="form-control" name="scriptName" type="text" ng-model="newScript.name" ng-required="addScript"/>
-                </td>
-                <td>
-                    <input class="form-control-file" type="file" ngf-select ng-model="newScript.file" name="file"    
-                         accept="application/pdf" ngf-max-size="10MB" ng-required="addScript"
-                         ngf-model-invalid="errorFile">
-                    <i ng-show="myForm.file.$error.maxSize">File too large 
-                      {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
-                    <button ng-click="newScript.scriptFile = null" ng-show="newScript.scriptFile" class="btn btn-outline-danger">Remove</button>
-                </td>
-                <td>
-                    <select class="form-control" ng-model="newScript.author" ng-options="item.id as item.name for item in scriptdata.authors">
-                    </select>
-                </td>
-                <td>
-                    Now
-                </td>
-                <td>
-                    <button ng-disabled="!myForm.$valid" class="btn btn-outline-success" ng-click="update(newScript, 'add')">Save</button> 
-                    <span class="progress" ng-show="newScript.scriptFile.progress >= 0">
-                        <div style="width:{{newScript.scriptFile.progress}}%" 
-                            ng-bind="newScript.scriptFile.progress + '%'"></div>
-                      </span>          
-                </td>
-                
-            </tr>
-            
-            <tr ng-hide></tr>
-            <tr ng-show="newScript.author == -1 && addScript">
-                <td>Author</td> 
-                <td colspan=3>Name:<input class="form-control" type="text" ng-model="newScript.user_name" ng-required="newScript.author == -1 && addScript"></td>
-                <td colspan=3>Email:<Input class="form-control" type="email" ng-model="newScript.user_email" ng-required="newScript.author == -1 && addScript"></td>
-                <td></td>
-            </tr>
-            
+
             <tr ng-repeat="script in scriptdata.scripts | orderBy:sortBy:sortReverse | filter:filterBy:True">
                 <td class="hidden-sm-down">{{ script.id }}</td>
                 <td>
@@ -174,7 +226,8 @@
                 <td>
                     <div ng-hide="editingData[script.id]">
                         <span class="hidden-md-up">File: </span>
-                        <a href="/script/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-upload_date')[0].filename }}" target="_blank">Open</a> | 
+                        <a href="/script/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-upload_date')[0].filename }}" target="_blank">Open</a>
+                        <br/>
                         <a href="/script/download/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-upload_date')[0].filename }}">Download</a>
                     </div>
                     <div ng-show="editingData[script.id]">
@@ -205,14 +258,10 @@
                 -->
                 <td>
                     <button class="btn btn-outline-secondary" ng-hide="editingData[script.id]" ng-click="modify(script)">Modify</button>
-                    <button class="btn btn-outline-primary" ng-show="editingData[script.id]" ng-click="cancel(script)">Cancel</button>
-                    <button class="btn btn-outline-success" ng-disabled="!myForm.$valid" ng-show="editingData[script.id]" ng-click="update(script, 'update')">Save</button>
-                    <button class="btn btn-outline-danger" ng-show="editingData[script.id]" confirmed-click="update(script, 'delete')" ng-confirm-click="Are you sure?">Delete</buton>
                 </td>
                 
             </tr>
             </tbody>
         </table>
-        </form>
     </div>
 </div>

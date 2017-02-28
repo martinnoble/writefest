@@ -334,7 +334,19 @@ angular.module('myApp').controller('scriptController',
 
     ScriptService.readData()
         .then(function() {
+
             $scope.scriptdata = ScriptService.getData();
+
+            $("#modalNewScript").on("hidden.bs.modal", function () {
+
+                if ($scope.updated)
+                {
+                    $scope.updated = false;
+                    console.log("Reloading");
+                    $route.reload();
+                }
+
+            });
             
             activeSeason = $scope.scriptdata.seasons[$scope.scriptdata.seasons.length-1].id;
             
@@ -350,22 +362,24 @@ angular.module('myApp').controller('scriptController',
             }
             
             
+            $scope.resetNewScript = function(data){
+                $scope.newScript = {id : 0, name: '', season: 1, author: -1, filename: '', status: 1};
+            };
+
             $scope.sortBy = 'id';
             $scope.sortReverse = false;
-            $scope.newScript = {name: '', season: 1, author: -1, filename: '', status: 1}
+
             
             $scope.addScript = false;
             $scope.editing = false;
-            $scope.editingData = [];
             
-            for (var i = 0; i < 100; i++) {
-                $scope.editingData[i] = false;
-            }
-            
-            $scope.modify = function(data){
-                $scope.editingData[data.id] = true;
+            $scope.modify = function(script){
                 $scope.editing = true;
+                $scope.newScript = script;
+                $('#modalNewScript').modal('show');
             };
+
+
             
             $scope.cancel = function(data){
                 $route.reload();
@@ -374,11 +388,15 @@ angular.module('myApp').controller('scriptController',
             
             $scope.update = function(data, action){
             
+
                 if (!data.file) {
                     
                     ScriptService.update(data, action)
                             .then(function () {
-                                $route.reload();
+
+                                $('#modalNewScript').modal('hide');
+                                $scope.updated = true;
+
                             })
                             .catch(function () {
                                 $scope.error = true;
@@ -404,7 +422,9 @@ angular.module('myApp').controller('scriptController',
         
                         ScriptService.update(data, action)
                             .then(function () {
-                                $route.reload();
+                                console.log("Update with file complete");
+                                $('#modalNewScript').modal('hide');
+                                $scope.updated = true;
                             })
                             .catch(function () {
                                 $scope.error = true;

@@ -21,14 +21,15 @@ manager.add_command('db', MigrateCommand)
 def create_db():
     """Creates the db tables."""
     db.create_all()
+    db.session.add(User(name='Admin', email='admin@writefest.com', password='admin', user_type=4))
     db.session.add(UserType(type='author'))
     db.session.add(UserType(type='user'))
     db.session.add(UserType(type='producer'))
     db.session.add(UserType(type='admin'))
     db.session.add(ScriptStatus(status='Submitted', description='Script has been submitted'))
-    db.session.add(ScriptStatus(status='Long List', description='Script has been included on the Long List for consideration by the judges', ratable=True))
-    db.session.add(ScriptStatus(status='Short List', description='Script has been short listed for inclusion', ratable=True))
-    db.session.add(ScriptStatus(status='Included', description='Script has been selected for inclusion in this season', ratable=True))
+    db.session.add(ScriptStatus(status='Under Consideration', description='Script has been included for consideration by the judges', ratable=True))
+    db.session.add(ScriptStatus(status='Selected', description='Script has been short listed for inclusion'))
+    db.session.add(ScriptStatus(status='Not Selected', description='Script has been selected for inclusion in this season'))
     db.session.add(ScriptStatus(status='Disqualified', description='Script has been disqualified - see notes for details'))
     db.session.commit()
 
@@ -51,7 +52,6 @@ def create_users():
     db.session.add(User(name='Fourth User', email='user4@writefest.com', password='user', user_type=2, can_rate=True))
     db.session.add(User(name='Fifth User', email='user5@writefest.com', password='user', user_type=2, can_rate=True))
     db.session.add(User(name='Producer', email='producer@writefest.com', password='producer', user_type=3, can_rate=True))
-    db.session.add(User(name='Admin', email='admin@writefest.com', password='admin', user_type=4))
     db.session.commit()
 
 
@@ -63,26 +63,18 @@ def create_data():
     db.session.add(Question(question='Opening'))
     db.session.add(Question(question='Standard of Dialogue'))
     db.session.add(Question(question='Characters'))
-    
     db.session.add(Question(question='Storyline'))
-    
     db.session.add(Question(question='How well does it fulfil its intended style?', description='(eg Comedy, Drama etc)'))
     db.session.add(Question(question='How well did it engage you?'))
     db.session.add(Question(question='Originality'))
     db.session.add(Question(question='Ending'))
     db.session.add(Question(question='Suitability for WriteFest', description='(i.e. can it be performed with little or no set)'))
-    
-    #db.session.add(Script(name='First Script', author=1, season=1, status=1,))
-    #db.session.add(Script(name='Second Script', author=1, season=1, status=2,))
-    #db.session.add(Script(name='Script Three', author=2, season=1, status=1,))
-    #db.session.add(Script(name='Script Four', author=2, season=1, status=2,))
-    
+
     sentences = get_sentences(200)
-    status = 1
-    users = [4,5,6,7,8,9]
+    users = [5,6,7,8,9,10]
     
     for script in range(1,61):
-        if random.randint(0, 100) > 80:
+        if random.randint(0, 100) > 90:
             status = 1
         else:
             status = 2

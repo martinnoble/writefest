@@ -8,7 +8,7 @@
   <title>WriteFest Script Submission System</title>
   
   <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="static/css/writefest.css">
   <link rel="stylesheet" href="static/css/font-awesome.min.css">
@@ -16,11 +16,14 @@
   <body>
     <div class="container">
     
-        <nav class="navbar navbar-light bg-faded">
-        <button class="navbar-toggler hidden-md-up" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbar-header" aria-expanded="false" aria-label="Toggle navigation"></button>
-        <div class="collapse navbar-toggleable-sm" id="navbar-header">
-          <a class="navbar-brand" href="#">WriteFest {{year}} Submissions</a>
-          <ul class="nav navbar-nav">
+    <nav class="navbar navbar-toggleable-sm navbar-light bg-faded">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="#">WriteFest {{year}} Submissions</a>
+        <div class="collapse  navbar-collapse" id="navbar-header">
+
+          <ul class="navbar-nav mr-auto">
             <li class="nav-item">
               <a href="#/" class="nav-link" ng-class="{'active': isActive('/')}">Home</a>
             </li>
@@ -49,15 +52,13 @@
             <li class="nav-item" ng-show="user.admin">
               <a href="#/admin/users" class="nav-link" ng-class="{'active': isActive('/admin/users')}">Users</a>
             </li>
-            
-            <li class="nav-item float-xs-right" ng-hide="user.loggedin">
-              <a href="#/login" class="nav-link" ng-class="{'active': isActive('/login')}">Login</a>
-            </li>
-            <li class="nav-item float-xs-right" ng-show="user.loggedin" ng-controller="logoutController">
-              <a href="#" ng-click='logout()' class="nav-link">Logout</a>
-            </li> 
-             
           </ul>
+          <div class="navbar-nav nav-item float-xs-right" ng-hide="user.loggedin">
+              <a href="#/login" class="nav-link" ng-class="{'active': isActive('/login')}">Login</a>
+          </div>
+          <div class="navbar-nav nav-item float-xs-right" ng-show="user.loggedin" ng-controller="logoutController">
+              <a href="#" ng-click='logout()' class="nav-link">Logout</a>
+          </div>
         </div>
       </nav>
     
@@ -71,7 +72,7 @@
     
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.10/angular.min.js" type="text/javascript"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.10/angular-route.min.js" type="text/javascript"></script>
