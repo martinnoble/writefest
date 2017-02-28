@@ -110,14 +110,16 @@ class Script(db.Model):
     status = db.Column(db.Integer, nullable=False)
     season = db.Column(db.Integer, nullable=False)
     author = db.Column(db.Integer, nullable=False)
+    pageCount = db.Column(db.Integer, nullable=False)
     submission_date = db.Column(db.DateTime, nullable=False)
     
     
-    def __init__(self, name, status, season, author):
+    def __init__(self, name, status, season, author, pageCount):
         self.name = name
         self.status = status
         self.season = season
         self.author = author
+        self.pageCount = pageCount
         self.submission_date = datetime.datetime.now()
 
     def dump(self):
@@ -126,12 +128,14 @@ class Script(db.Model):
                 'status': self.status,
                 'season': self.season,
                 'author': self.author,
+                'pageCount': self.pageCount,
                 'submission_date': self.submission_date 
                 }
                 
     def dumpNames(self):
         return {'id': self.id, 
-                'name': self.name
+                'name': self.name,
+                'pageCount': self.pageCount
                 }
                 
     def __repr__(self):

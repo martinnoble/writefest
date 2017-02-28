@@ -26,6 +26,7 @@
                 <tr class="hidden-sm-down">
                     <th class="idCol">Id</th>
                     <th>Name</th>
+                    <th>Pages</th>
                     <th class="btnCol"></th>
             </thead>
         
@@ -34,6 +35,9 @@
                     <td class="hidden-sm-down">{{ script.id }}</td>
                     <td>
                         {{ script.name }}
+                    </td>
+                    <td>
+                        {{ script.pageCount }}
                     </td>
                     <td>
                         <button class="btn btn-outline-primary" ng-hide="editingData[script.id]" ng-click="initRating(script.id)">Rate</button>

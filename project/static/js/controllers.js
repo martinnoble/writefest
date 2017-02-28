@@ -215,7 +215,7 @@ angular.module('myApp').controller('producerController',
                     }   
                 }
                 
-                console.log(script.average);
+                //console.log(script.average);
             }
             
         })
@@ -363,7 +363,7 @@ angular.module('myApp').controller('scriptController',
             
             
             $scope.resetNewScript = function(data){
-                $scope.newScript = {id : 0, name: '', season: 1, author: -1, filename: '', status: 1};
+                $scope.newScript = {id : 0, name: '', season: 1, author: -1, filename: '', status: 1, pageCount: ''};
             };
 
             $scope.sortBy = 'id';

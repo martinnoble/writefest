@@ -79,7 +79,7 @@ def create_data():
         else:
             status = 2
             
-        db.session.add(Script(name=random.choice(sentences), author=random.randint(1, 3), season=1, status=status))
+        db.session.add(Script(name=random.choice(sentences), author=random.randint(1, 3), season=1, status=status, pageCount=random.randint(1, 10)))
         db.session.add(File(filename='1/test.pdf', script=script))
         
         for user in users:
