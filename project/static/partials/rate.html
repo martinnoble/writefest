@@ -54,8 +54,8 @@
     </div>
 </div>
 
-<div ng-show="currentScript" class="row">
-    <div class="col-xs-12">
+<div class="row" ng-show="currentScript">
+    <div class="col-md-12">
         <table class="table table-striped mobileTable">
         
             <thead>
@@ -75,15 +75,16 @@
                         {{ question.description }}
                     </td>
                     <td>
-                        <label class="form-check-inline hidden-sm-down" ng-repeat="answer in answersType1">
-                            <input class="form-check-input" type="radio" 
-                                name="answer_{{question.id}}" 
-                                id="answer_{{question.id}}_{{answer.id}}" 
-                                ng-model="currentRating[question.id]" 
-                                ng-value="answer.id">
-                            {{ answer.answer }}
-                        </label>
-                    
+                        <div class="form-check form-check-inline" ng-repeat="answer in answersType1">
+                            <label class="form-check-label hidden-sm-down">
+                                <input class="form-check-input" type="radio"
+                                    name="answer_{{question.id}}"
+                                    id="answer_{{question.id}}_{{answer.id}}"
+                                    ng-model="currentRating[question.id]"
+                                    ng-value="answer.id">
+                                {{ answer.answer }}
+                            </label>
+                        </div>
                         <select class="form-control hidden-md-up" ng-model="currentRating[question.id]" ng-options="item.id as item.answer for item in answersType1">
                         </select>
                     
@@ -140,15 +141,16 @@
                         {{ question.description }}
                     </td>
                     <td>
-                        <label class="form-check-inline hidden-sm-down" ng-repeat="answer in answersType2">
-                            <input class="form-check-input" type="radio" 
-                                name="answer_{{question.id}}" 
-                                id="answer_{{question.id}}_{{answer.id}}" 
-                                ng-model="currentRating[question.id]" 
-                                ng-value="answer.id">
-                            {{ answer.answer }}
-                        </label>
-                    
+                        <div class="form-check form-check-inline" ng-repeat="answer in answersType2">
+                            <label class="form-check-label hidden-sm-down">
+                                <input class="form-check-input" type="radio"
+                                    name="answer_{{question.id}}"
+                                    id="answer_{{question.id}}_{{answer.id}}"
+                                    ng-model="currentRating[question.id]"
+                                    ng-value="answer.id">
+                                    {{ answer.answer }}
+                            </label>
+                        </div>
                         <select class="form-control hidden-md-up" ng-model="currentRating[question.id]" ng-options="item.id as item.answer for item in answersType2">
                         </select>
                     
