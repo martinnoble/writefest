@@ -338,6 +338,8 @@ def rating():
     
         scripts = Script.query.filter_by(season = curSeason.id).filter(Script.status.in_(statusList)).all()
         
+        files = File.query.all()
+
         ratings = Rating.query.filter_by(user_id=session['userid']).all()
         
         comments = Comments.query.filter_by(user_id=session['userid']).all()
@@ -347,6 +349,7 @@ def rating():
         result = {
                 'result': True, 
                 'scripts': [ob.dumpNames() for ob in scripts],
+                'files': [ob.dump() for ob in files],
                 'ratings': [ob.dump() for ob in ratings],
                 'questions': [ob.dump() for ob in questions],
                 'comments': [ob.dump() for ob in comments]
@@ -366,18 +369,22 @@ def rating():
         
         notes = ""
         feedback = ""
+        duration = None
+
         if 'notes' in ratingdata:
             notes = ratingdata['notes']
         if 'feedback' in ratingdata:    
             feedback = ratingdata['feedback']
-        
+        if 'duration' in ratingdata:
+            duration = ratingdata['duration']
+
         if comment:
             print("old: " + str(comment))
             comment.notes = notes
             comment.feedback = feedback
             comment.duration = ratingdata['duration']
         else:
-            comment = Comments(user=session['userid'], script=script, notes=notes, feedback=feedback, duration=ratingdata['duration'])
+            comment = Comments(user=session['userid'], script=script, notes=notes, feedback=feedback, duration=duration)
             db.session.add(comment)
         print("new: " + str(comment))
         
@@ -395,10 +402,14 @@ def rating():
                 if rating:
                     print("old: " + str(rating))
                 
-                    rating.rating = ratingdata[key]
+                    if (ratingdata[key] is None):
+                        db.session.delete(rating)
+                    else:
+                        rating.rating = ratingdata[key]
                 else:
-                    rating = Rating(user=session['userid'], script=script, question=key, rating=ratingdata[key])
-                    db.session.add(rating)
+                    if (ratingdata[key] is not None):
+                        rating = Rating(user=session['userid'], script=script, question=key, rating=ratingdata[key])
+                        db.session.add(rating)
             
             print("new: " + str(rating))
             
@@ -452,4 +463,3 @@ def producer():
             }
     
     return jsonify(result)
-        

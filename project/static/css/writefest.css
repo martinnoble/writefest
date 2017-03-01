@@ -8,14 +8,17 @@ body {
     margin-bottom: 20px;
 }
 
-
-
+textarea.ng-valid,
 input.ng-valid {
     background-color: #e6ffe6 !important;
 }
+
+textarea.ng-pristine,
 input.ng-pristine {
     background-color: #e6faff !important;
 }
+
+textarea.ng-invalid,
 input.ng-invalid {
     background-color: #ffe6e6 !important;
 }
@@ -42,8 +45,13 @@ table .btn, .ratingData .btn {
     width: 100%;
 }
 
+.pageCol,
 .btnCol {
     width: 75px;
+}
+
+.downloadCol {
+    width: 100px;
 }
 
 .idCol {

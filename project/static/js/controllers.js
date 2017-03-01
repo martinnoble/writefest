@@ -247,11 +247,15 @@ angular.module('myApp').controller('ratingController',
             
                 script = $scope.ratingdata.scripts[i];
                 
-                notSetFinalRatings = filterFilter($scope.ratingdata.ratings, {question_id: qType2.id, script_id: script.id, rating: 0}, true);
+                finalRating = filterFilter($scope.ratingdata.ratings, {question_id: qType2.id, script_id: script.id}, true);
                 allRatings = filterFilter($scope.ratingdata.ratings, {script_id: script.id}, true);
                 
+                console.log(script.id);
+                console.log(finalRating);
+                console.log(allRatings);
                 
-                if (notSetFinalRatings.length == 0 && allRatings.length > 0) {
+
+                if (finalRating.length > 0) {
                     script.rated = 'full';
                 } else if (allRatings.length > 0) {
                     script.rated = 'partial';

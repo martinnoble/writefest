@@ -55,7 +55,7 @@ class Rating(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, )
     script_id = db.Column(db.Integer, db.ForeignKey('script.id'), nullable=False)
     question_id = db.Column(db.Integer, db.ForeignKey('questions.id'), nullable=False)
-    rating = db.Column(db.Integer, nullable=False)
+    rating = db.Column(db.Integer)
     
     users = db.relationship("User")
     questions = db.relationship("Question")
@@ -285,4 +285,3 @@ class Season(db.Model):
     def __repr__(self):
         return '<Season {0}:{1} -> {2}>'.format(self.id, self.start_date, self.end_date)
 
-    
