@@ -214,8 +214,7 @@ angular.module('myApp').controller('producerController',
                         script.rank = prevscript.rank;
                     }   
                 }
-                
-                //console.log(script.average);
+
             }
             
         })
@@ -230,7 +229,6 @@ angular.module('myApp').controller('ratingController',
   ['$scope', '$location', 'RatingService', 'filterFilter', '$route',
   function ($scope, $location, RatingService, filterFilter, $route) {
 
-    console.log("Rating controller starting");
 
     RatingService.readData()
         .then(function() {
@@ -250,10 +248,7 @@ angular.module('myApp').controller('ratingController',
                 finalRating = filterFilter($scope.ratingdata.ratings, {question_id: qType2.id, script_id: script.id}, true);
                 allRatings = filterFilter($scope.ratingdata.ratings, {script_id: script.id}, true);
                 
-                console.log(script.id);
-                console.log(finalRating);
-                console.log(allRatings);
-                
+
 
                 if (finalRating.length > 0) {
                     script.rated = 'full';
@@ -347,7 +342,6 @@ angular.module('myApp').controller('scriptController',
                 if ($scope.updated)
                 {
                     $scope.updated = false;
-                    console.log("Reloading");
                     $route.reload();
                 }
 
@@ -427,7 +421,6 @@ angular.module('myApp').controller('scriptController',
         
                         ScriptService.update(data, action)
                             .then(function () {
-                                console.log("Update with file complete");
                                 $('#modalNewScript').modal('hide');
                                 $scope.updated = true;
                             })
@@ -516,7 +509,6 @@ angular.module('myApp').controller('adminController',
   ['$scope', '$location', 'AuthService', 'AdminService', '$route',
   function ($scope, $location, AuthService, AdminService, $route) {
 
-    console.log("Admin controller started");
    
     AdminService.readData()
         .then(function() {
