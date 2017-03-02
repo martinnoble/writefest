@@ -1,16 +1,9 @@
 <h1>{{pageTitle}}</div></h1>
 
-<div class="row" ng-hide="currentScript">
-    <div class="col-xs-12">
-        <table class="table table-striped mobileTable">
-            <thead>
-                <tr>
-                    <td ng-repeat="status in ratingStatus">
-                        {{status.description}}: {{ (ratingdata.scripts | filter:{rated:status.id}).length }}
-                    </td>
-                </tr>
-            </thead>
-        </table>
+<div class="ratingData row" ng-hide="currentScript">
+    <div class="col-md-4 text-center" ng-repeat="status in ratingStatus">
+        <span class="heading">{{status.description}}:</span>
+        {{ (ratingdata.scripts | filter:{rated:status.id}).length }}
     </div>
 </div>
 
@@ -20,12 +13,13 @@
         <table class="table table-striped mobileTable">
             <thead>
                 <tr>
-                    <th colspan=5>{{status.description}}</th>
+                    <th colspan=6 class="text-center section-top">{{status.description}}</th>
                 </tr>
             
-                <tr class="hidden-sm-down">
+                <tr class="hidden-md-down">
                     <th class="idCol">Id</th>
                     <th>Name</th>
+                    <th class="ratingCol" ng-show="status.id == 'full'">Rating</th>
                     <th class="downloadCol">File</th>
                     <th class="pageCol">Pages</th>
                     <th class="btnCol"></th>
@@ -33,16 +27,26 @@
         
             <tbody>
                 <tr ng-repeat="script in ratingdata.scripts | filter:{rated:status.id}">
-                    <td class="hidden-sm-down">{{ script.id }}</td>
                     <td>
-                        {{ script.name }}
+                        <span class="hidden-md-up heading">Id: </span>
+                        {{ script.id }}
                     </td>
                     <td>
+                        <span class="hidden-md-up heading">Name: </span>
+                        {{ script.name }}
+                    </td>
+                    <td ng-show="status.id == 'full'">
+                        <span class="hidden-md-up heading">Rating: </span>
+                        {{ script.rating }}
+                    </td>
+                    <td>
+                        <span class="hidden-md-up heading">File: </span>
                         <a href="/script/{{ ((ratingdata.files | filter : {'script': script.id}) | orderBy:'-upload_date')[0].filename }}" target="_blank">Open</a>
-                        <br/>
+                        <span class="hidden-md-up"> | </span>
                         <a href="/script/download/{{ ((ratingdata.files | filter : {'script': script.id}) | orderBy:'-upload_date')[0].filename }}">Download</a>
                     </td>
                     <td>
+                        <span class="hidden-md-up heading">Pages: </span>
                         {{ script.pageCount }}
                     </td>
                     <td>

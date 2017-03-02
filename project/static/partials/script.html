@@ -109,7 +109,7 @@
 <h1>Producer - Scripts</h1>
 
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-md-12">
         
         
         <form class="">
@@ -208,62 +208,31 @@
             <tr ng-repeat="script in scriptdata.scripts | orderBy:sortBy:sortReverse | filter:filterBy:True">
                 <td class="hidden-sm-down">{{ script.id }}</td>
                 <td>
-                    <div ng-hide="editingData[script.id]"><span class="hidden-md-up">Season: </span>{{ (scriptdata.seasons | filter : {'id': script.season})[0].year }}</div>
-                    <div ng-show="editingData[script.id]">
-                        <span class="hidden-md-up">Season: </span>
-                        <select class="form-control" ng-model="script.season" ng-options="item.id as item.year for item in scriptdata.seasons">
-                        </select>
-                    </div>
+                    <span class="hidden-md-up heading">Season: </span>
+                    {{ (scriptdata.seasons | filter : {'id': script.season})[0].year }}
                 </td>
                 <td>
-                    
-                    <div ng-hide="editingData[script.id]"><span class="hidden-md-up">Status: </span>{{ (scriptdata.statuses | filter : {'id': script.status})[0].status }}</div>
-                    <div ng-show="editingData[script.id]">
-                        <span class="hidden-md-up">Status: </span>
-                        <select class="form-control" ng-model="script.status" ng-options="item.id as item.status for item in scriptdata.statuses">
-                        </select>
-                    </div>
+                    <span class="hidden-md-up heading">Status: </span>
+                    {{ (scriptdata.statuses | filter : {'id': script.status})[0].status }}
                 </td>
                 <td>
-                    <div ng-hide="editingData[script.id]"><span class="hidden-md-up">Title: </span>{{ script.name }}</div>
-                    <div ng-show="editingData[script.id]">
-                        <span class="hidden-md-up">Title: </span>
-                        <input class="form-control" type="text" ng-model="script.name" ng-required="editingData[script.id]"/>
-                    </div>
+                    <span class="hidden-md-up heading">Title: </span>
+                    {{ script.name }}
                 </td>
                 <td>
-                    <div ng-hide="editingData[script.id]">
-                        <span class="hidden-md-up">File: </span>
-                        <a href="/script/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-upload_date')[0].filename }}" target="_blank">Open</a>
-                        <br/>
-                        <a href="/script/download/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-upload_date')[0].filename }}">Download</a>
-                    </div>
-                    <div ng-show="editingData[script.id]">
-                        <span class="hidden-md-up">File: </span>
-                        <input class="form-control-file" type="file" ngf-select ng-model="script.file" name="file"    
-                             accept="application/pdf" ngf-max-size="10MB"
-                             ngf-model-invalid="errorFile">
-                        <i ng-show="myForm.file.$error.maxSize">File too large 
-                          {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
-                        <sub>Leave blank to keep existing file</sub>
-                        <button ng-click="script.scriptFile = null" ng-show="script.scriptFile" class="btn btn-outline-danger">Remove</button>
-                    </div>
+                    <span class="hidden-md-up heading">File: </span>
+                    <a href="/script/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-upload_date')[0].filename }}" target="_blank">Open</a>
+                    <span class="hidden-md-up"> | </span>
+                    <a href="/script/download/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-upload_date')[0].filename }}">Download</a>
                 </td>
                 <td>
-                    <div ng-hide="editingData[script.id]"><span class="hidden-md-up">Author: </span>{{ (scriptdata.authors | filter : {'id': script.author} : true)[0].name }}</div>
-                    <div ng-show="editingData[script.id]">
-                        <span class="hidden-md-up">Author: </span>
-                        <select class="form-control" ng-model="script.author" ng-options="item.id as item.name for item in scriptdata.authors">
-                        </select>
-                    </div>                
+                    <span class="hidden-md-up heading">Author: </span>
+                    {{ (scriptdata.authors | filter : {'id': script.author} : true)[0].name }}
                 </td>
-                <td class="hidden-sm-down">{{ script.submission_date }}</td>
-                <!--
                 <td>
-                    <div ng-hide="editingData[question.id]">{{ question.question }}</div>
-                    <div ng-show="editingData[question.id]"><input class="form-control" type="text" ng-model="question.question" /></div>
+                    <span class="hidden-md-up heading">Submitted: </span>
+                    {{ script.submission_date }}
                 </td>
-                -->
                 <td>
                     <button class="btn btn-outline-secondary" ng-hide="editingData[script.id]" ng-click="modify(script)">Modify</button>
                 </td>

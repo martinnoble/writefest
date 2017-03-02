@@ -257,6 +257,7 @@ angular.module('myApp').controller('ratingController',
 
                 if (finalRating.length > 0) {
                     script.rated = 'full';
+                    script.rating = filterFilter($scope.answersType2, {id: finalRating[0].rating}, true)[0].answer;
                 } else if (allRatings.length > 0) {
                     script.rated = 'partial';
                 } else {
