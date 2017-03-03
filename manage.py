@@ -73,7 +73,7 @@ def create_data():
     sentences = get_sentences(200)
     users = [5,6,7,8,9,10]
     
-    scriptCount = 4
+    scriptCount = 40
 
     for script in range(1,scriptCount + 1):
         if random.randint(0, 100) > 90:
