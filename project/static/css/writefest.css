@@ -35,6 +35,9 @@ form .progress {
     line-height: 15px;
 }
 
+.form-control {
+    margin-bottom: 2px
+}
 
 .progress {
     display: inline-block;

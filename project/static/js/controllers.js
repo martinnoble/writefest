@@ -171,7 +171,7 @@ angular.module('myApp').controller('producerController',
                     if (otherRatings.length > 0) {
                         for (k=0; k < otherRatings.length; k++) {
                             if (otherRatings[k].rating > 0 && otherRatings[k].question_id != $scope.producerdata.finalQId) {
-                                sumOfSquareRatingDifs += Math.pow(finalRatings[0].rating - otherAverage, 2);
+                                sumOfSquareRatingDifs += Math.pow(otherRatings[k].rating - otherAverage, 2);
                             }
                         }
                     }
