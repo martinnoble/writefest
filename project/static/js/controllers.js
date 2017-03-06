@@ -514,6 +514,34 @@ angular.module('myApp').controller('adminController',
         .then(function() {
             $scope.admindata = AdminService.getData();
             
+            $("#modalNewUser").on("hidden.bs.modal", function () {
+
+                if ($scope.updated)
+                {
+                    $scope.updated = false;
+                    $route.reload();
+                }
+
+            });
+
+            $scope.resetNewUser = function(data){
+                $scope.newUser = {id: 0, name: '', email: '', user_type: 1, password: '', can_rate: false};
+            };
+
+            $scope.filterBy = {};
+            $scope.filterUpdate = function() {
+
+                for (var key in $scope.filterBy) {
+                    if ($scope.filterBy[key] == null) {
+                        $scope.filterBy[key] = "";
+                    }
+                }
+
+            }
+
+            $scope.sortBy = 'id';
+            $scope.sortReverse = false;
+
             $scope.questiontypes = [
                 {id: 1, type: 'Normal'},
                 {id: 2, type: 'Final Vote'}
@@ -525,6 +553,12 @@ angular.module('myApp').controller('adminController',
                 $scope.editingData[i] = false;
             }
             
+            $scope.modifyUser = function(user){
+                $scope.editing = true;
+                $scope.newUser = user;
+                $('#modalNewUser').modal('show');
+            };
+
             $scope.modify = function(data){
                 $scope.editingData[data.id] = true;
             };
@@ -534,13 +568,13 @@ angular.module('myApp').controller('adminController',
             };
             
             $scope.newQuestion = {id: 0, question: ''};
-            $scope.newUser = {id: 0, name: '', email: '', user_type: 0, password: ''};
             
             
             $scope.update = function(type, data, action){
                 AdminService.update(type, data, action)
                     .then(function () {
-                        $route.reload();
+                        $('#modalNewUser').modal('hide');
+                        $scope.updated = true;
                     })
                     .catch(function () {
                         $scope.error = true;

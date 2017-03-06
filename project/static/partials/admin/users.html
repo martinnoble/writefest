@@ -1,78 +1,172 @@
-<h1>Admin - Seasons</h1>
+<!-- New Script Modal -->
+<div class="modal fade" id="modalNewUser" tabindex="-1" role="dialog" aria-labelledby="modalNewScriptTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalNewScriptTitle">Add User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="container-fluid">
+            <form name="newUserForm">
+                <div class="row">
+                    <div class="col-md-4">
+                        Name:
+                    </div>
+                    <div class="col-md-8">
+                        <input class="form-control" name="userName" type="text" ng-model="newUser.name" required/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        Email:
+                    </div>
+                    <div class="col-md-8">
+                        <input class="form-control" name="userEmail" type="email" ng-model="newUser.email" required/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        Password:
+                    </div>
+                    <div class="col-md-8">
+                        <input class="form-control" name="userPasswrd" type="password" ng-model="newUser.password"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        User Type:
+                    </div>
+                    <div class="col-md-8">
+                        <select class="form-control" name="userType" ng-model="newUser.user_type" ng-options="item.id as item.type for item in admindata.usertypes" required>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        Can Rate?:
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" ng-model="newUser.can_rate">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+          </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button ng-disabled="!newUserForm.$valid" ng-show="newUser.id == 0" class="btn btn-outline-success" ng-click="update('users', newUser, 'add')">Save</button>
+        <button ng-disabled="!newUserForm.$valid" ng-hide="newUser.id == 0" class="btn btn-outline-success" ng-click="update('users', newUser, 'update')">Save</button>
+        <button class="btn btn-outline-danger" ng-hide="newUser.id == 0" confirmed-click="update('users', newUser, 'delete')" ng-confirm-click="Are you sure?">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h1>Admin</h1>
 
 <div class="row">
     <div class="col-md-12">
         <h4>Users</h4>
-        <table class="table">
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Password</th>
-                <th>User Type</th>
-                <th>Can Rate?</th>
-                <th></th>
-            </tr>
-            <tr ng-repeat="user in admindata.users">
-                <td>{{ user.id }}</td>
-                <td>
-                    <div ng-hide="editingData[user.id]">{{ user.name }}</div>
-                    <div ng-show="editingData[user.id]"><input class="form-control" type="text" ng-model="user.name" /></div>
-                </td>
-                <td>
-                    <div ng-hide="editingData[user.id]">{{ user.email }}</div>
-                    <div ng-show="editingData[user.id]"><input class="form-control" type="text" ng-model="user.email" /></div>
-                </td>
-                <td>
-                    <div ng-hide="editingData[user.id]">*****</div>
-                    <div ng-show="editingData[user.id]"><input class="form-control" type="password" ng-model="user.password" /></div>
-                </td>
-                <td>
-                    <div ng-hide="editingData[user.id]">{{ user.user_type_name }}</div>
-                    <div ng-show="editingData[user.id]">
-                        <select class="form-control" ng-model="user.user_type" ng-options="item.id as item.type for item in admindata.usertypes">
-                        </select>
-                    </div>
-                </td>
-                <td>
-                    <div ng-hide="editingData[user.id]">{{ user.can_rate }}</div>
-                    <div ng-show="editingData[user.id]">
-                        <div class="form-check">
-                          <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" ng-model="user.can_rate">
-                          </label>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <button class="btn btn-outline-secondary" ng-hide="editingData[user.id]" ng-click="modify(user)">Modify</button>
-                    <button class="btn btn-outline-primary" ng-show="editingData[user.id]" ng-click="cancel(user)">Cancel</button>
-                    <button class="btn btn-outline-success" ng-show="editingData[user.id]" ng-click="update('users', user, 'update')">Save</button>
-                    <button class="btn btn-outline-danger" ng-show="editingData[user.id]" confirmed-click="update('users', user, 'delete')" ng-confirm-click="Are you sure?">Delete</buton>
-                </td>
-            </tr>
-            
-            <tr>
-                <td>New</td>
-                <td><input class="form-control" type="text" ng-model="newUser.name"/></td>
-                <td><input class="form-control" type="text" ng-model="newUser.email"/></td>
-                <td><input class="form-control" type="password" ng-model="newUser.password"/></td>
-                <td>
-                    <select class="form-control" ng-model="newUser.user_type" ng-options="item.id as item.type for item in admindata.usertypes">
+
+        <form class="">
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="filterType">User Type:</label>
+                    <select id="filterType" class="form-control"
+                            ng-model="filterBy.user_type"
+                            ng-options="item.id as item.type for item in admindata.usertypes"
+                            ng-change="filterUpdate()">
+                        <option value=""> - All -</option>
                     </select>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="filterRate">Can Rate?:</label>
+                    <select id="filterAuthor" class="form-control"
+                            ng-model="filterBy.can_rate"
+                            ng-change="filterUpdate()">
+                        <option value=""> - All -</option>
+                        <option value="true">True</option>
+                        <option value="false">False</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+
+        <table class="table">
+
+            <tr>
+                <th>
+                    <a href="" ng-click="sortBy = 'id'; sortReverse = !sortReverse">
+                        Id
+                        <span ng-show="sortBy == 'id' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortBy == 'id' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <a href="" ng-click="sortBy = 'name'; sortReverse = !sortReverse">
+                        Name
+                        <span ng-show="sortBy == 'name' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortBy == 'name' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <a href="" ng-click="sortBy = 'email'; sortReverse = !sortReverse">
+                        Email
+                        <span ng-show="sortBy == 'email' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortBy == 'email' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <a href="" ng-click="sortBy = 'user_type'; sortReverse = !sortReverse">
+                        User Type
+                        <span ng-show="sortBy == 'user_type' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortBy == 'user_type' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <a href="" ng-click="sortBy = 'can_rate'; sortReverse = !sortReverse">
+                        Can Rate?
+                        <span ng-show="sortBy == 'can_rate' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortBy == 'can_rate' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
+                    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#modalNewUser" ng-click="resetNewUser()">Add</button>
+                </th>
+            </tr>
+
+            <tr ng-repeat="user in admindata.users | orderBy:sortBy:sortReverse | filter:filterBy:True">
+                <td>
+                    {{ user.id }}
                 </td>
                 <td>
-                    <div class="form-check">
-                          <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" ng-model="newUser.can_rate">
-                          </label>
-                        </div>
-                    </div>
+                    {{ user.name }}
                 </td>
                 <td>
-                    <button class="btn btn-outline-success" ng-click="update('users', newUser, 'add')">Save</button> 
+                    {{ user.email }}
+                </td>
+                <td>
+                    {{ user.user_type_name }}
+                </td>
+                <td>
+                    {{ user.can_rate }}
+                </td>
+                <td>
+                    <button class="btn btn-outline-secondary" ng-click="modifyUser(user)">
+                        Modify
+                    </button>
                 </td>
             </tr>
+
         </table>
     </div>
 </div>
