@@ -63,11 +63,9 @@ angular.module('myApp').controller('producerController',
             
             
             $scope.scriptDetail = function(script){
-            
-                $scope.mode = 'script';
                 $scope.activeScript = script;
                 $scope.activeComments = filterFilter($scope.producerdata.comments, {script_id: script.id}, true);
-                
+                $('#modalScript').modal('show');
             }
             
             $scope.greaterThan = function(prop, val){

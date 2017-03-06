@@ -1,78 +1,88 @@
-<h1>Producer</h1>
 
-<div ng-show="mode=='script'">
-    <div class="row">
-        <div class="col-md-12">
-            <h4>Script Detail</h4>
-        </div>
+<!-- New Script Modal -->
+<div class="modal fade" id="modalScript" tabindex="-1" role="dialog" aria-labelledby="modalNewScriptTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalNewScriptTitle">Script Detail</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+            <div class="row">
+                <div class="col-sm-12 text-xs-center">
+                    <h5>{{ activeScript.name }}</h5>
+                </div>
+            </div>
+
+
+          <table class="table">
+                    <thead>
+                        <tr>
+                            <th colspan="2" class="text-xs-center">
+                                Internal Notes
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="user in producerdata.users"
+                            ng-show="(activeComments | filter:{'user_id':user.id}:true).length > 0 && (activeComments | filter:{'user_id':user.id}:true)[0].notes != ''">
+                            <td>
+                                {{ user.name }}
+                            </td>
+                            <td>
+                                {{ (activeComments | filter:{'user_id':user.id}:true)[0].notes }}
+                            </td>
+                        </tr>
+                    </tbody>
+
+                    <thead>
+                        <tr>
+                            <th colspan="2" class="text-xs-center">
+                                Author Feedback
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="user in producerdata.users"
+                            ng-show="(activeComments | filter:{'user_id':user.id}:true).length > 0 && (activeComments | filter:{'user_id':user.id}:true)[0].feedback != ''">
+                            <td>
+                                {{ user.name }}
+                            </td>
+                            <td>
+                                {{ (activeComments | filter:{'user_id':user.id}:true)[0].feedback }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Closed</button>
+      </div>
     </div>
-    <div class="row">
-        <div class="col-sm-1 push-sm-11">
-            <button class="btn btn-outline-success" ng-click="mode='status'">Close</button>
-        </div>
-        <div class="col-sm-11 pull-sm-1 text-xs-center">
-            <h5>{{ activeScript.name }}</h5>
-        </div>
-    </div>
-    
-    <div class="row">
-        
-        <table class="table">
-            <thead>
-                <tr>
-                    <th colspan="2" class="text-xs-center">
-                        Internal Notes
-                    </th>
-                </tr>
-            </thead>
-            
-            <thead>
-                <tr>
-                    <th>User</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="user in producerdata.users"
-                    ng-show="(activeComments | filter:{'user_id':user.id}:true).length > 0 && (activeComments | filter:{'user_id':user.id}:true)[0].notes != ''">
-                    <td>
-                        {{ user.name }}
-                    </td>
-                    <td>
-                        <pre>{{ (activeComments | filter:{'user_id':user.id}:true)[0].notes }}</pre>
-                    </td>
-                </tr>
-            </tbody>
-            
-            <thead>
-                <tr>
-                    <th colspan="2" class="text-xs-center">
-                        Author Feedback
-                    </th>
-                </tr>
-            </thead>
-         
-            <thead>
-                <tr>
-                    <th>User</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="user in producerdata.users"
-                    ng-show="(activeComments | filter:{'user_id':user.id}:true).length > 0 && (activeComments | filter:{'user_id':user.id}:true)[0].feedback != ''">
-                    <td>
-                        {{ user.name }}
-                    </td>
-                    <td>
-                        <pre>{{ (activeComments | filter:{'user_id':user.id}:true)[0].feedback }}</pre>
-                    </td>
-                </tr>
-        </table>
-    
-    </div>
-    
+  </div>
 </div>
+
+
+<h1>Producer</h1>
 
 
 <div class="row prodTable" ng-show="mode=='status'">
