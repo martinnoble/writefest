@@ -12,3 +12,9 @@ class BaseConfig(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = 'uploads'
     UPLOAD_PATH = os.path.join(basedir, 'uploads')
+    LOG_PATH = os.path.join(basedir, '../logs')
+    ACCESS_LOG = os.path.join(LOG_PATH, 'access.log')
+    WRITEFEST_LOG = os.path.join(LOG_PATH, 'writefest.log')
+
+    LOGGING_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+

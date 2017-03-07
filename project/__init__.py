@@ -17,17 +17,16 @@ from logging.handlers import RotatingFileHandler
 app = Flask(__name__)
 app.config.from_object(BaseConfig)
 
-LOGGING_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
-handler = RotatingFileHandler('logs/writefest.log', maxBytes=10000, backupCount=5)
+handler = RotatingFileHandler(app.config['WRITEFEST_LOG'], maxBytes=10000, backupCount=5)
 handler.setLevel(logging.DEBUG)
-formatter = logging.Formatter(LOGGING_FORMAT)
+formatter = logging.Formatter(app.config['LOGGING_FORMAT'])
 handler.setFormatter(formatter)
 
 app.logger.addHandler(handler)
 
 access_logger = logging.getLogger('werkzeug')
-handler = logging.FileHandler('logs/access.log')
+handler = logging.FileHandler(app.config['ACCESS_LOG'])
 access_logger.addHandler(handler)
 
 
