@@ -31,6 +31,9 @@ def create_db():
     db.session.add(ScriptStatus(status='Selected', description='Script has been short listed for inclusion'))
     db.session.add(ScriptStatus(status='Not Selected', description='Script has been selected for inclusion in this season'))
     db.session.add(ScriptStatus(status='Disqualified', description='Script has been disqualified - see notes for details'))
+
+    db.session.add(Season(year=2017, start_date=datetime.date(2016, 11, 1), end_date=datetime.date(2017, 5, 1)))
+
     db.session.commit()
 
 
@@ -58,7 +61,6 @@ def create_users():
 @manager.command
 def create_data():
     """Creates sample data."""
-    db.session.add(Season(year=2017, start_date=datetime.date(2016, 11, 1), end_date=datetime.date(2017, 5, 1)))
     db.session.add(Question(question='Should we perform it?', type=2))
     db.session.add(Question(question='Opening'))
     db.session.add(Question(question='Standard of Dialogue'))
