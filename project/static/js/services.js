@@ -1,3 +1,37 @@
+
+angular.module('myApp').factory('AccountService',
+  ['$q', '$timeout', '$http',
+  function ($q, $timeout, $http) {
+
+
+    // return available functions for use in controllers
+    return ({
+      update: update
+    });
+
+    function update(data) {
+        // create a new instance of deferred
+
+        var deferred = $q.defer();
+
+        $http.post('/api/account', {data: data})
+            .success(function (data, status) {
+          if(status === 200 && data.result){
+            deferred.resolve();
+          } else {
+            deferred.reject();
+          }
+        })
+        // handle error
+        .error(function (data) {
+          deferred.reject();
+        });
+
+        return deferred.promise;
+    }
+
+}]);
+
 angular.module('myApp').factory('ProducerService',
   ['$q', '$timeout', '$http',
   function ($q, $timeout, $http) {
@@ -229,6 +263,7 @@ angular.module('myApp').factory('AuthService',
       register: register,
       getUserStatus: getUserStatus,
       getUserName: getUserName,
+      getUserEmail: getUserEmail,
       isAdmin: isAdmin,
       isProducer: isProducer,
       isUser: isUser,
@@ -241,6 +276,10 @@ angular.module('myApp').factory('AuthService',
 
     function getUserName() {
         return user.name;
+    }
+
+    function getUserEmail() {
+        return user.email;
     }
     
     function isAdmin() {
@@ -348,10 +387,12 @@ angular.module('myApp').factory('AuthService',
         if(data.logged_in){
           user.logged_in = true;
           user.name = data.name;
+          user.email = data.email;
           user.user_type = data.user_type;
         } else {
           user.logged_in = false;
           user.name = '';
+          user.email = '';
           user.user_type = '';
         }
       })

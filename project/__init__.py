@@ -59,6 +59,37 @@ def register():
     return jsonify({'result': status})
 
 
+@app.route('/api/account', methods=['POST'])
+def account():
+    json_data = request.json
+
+    user_data = json_data['data']
+
+
+    name = user_data['name']
+    email = user_data['email'].lower()
+    password = user_data['password']
+
+    newPass = None
+    if 'newPass' in user_data:
+        newPass = user_data['newPass']
+
+    status = False
+
+    user = User.query.filter_by(email=email).first()
+    if user and user.email == session['email'] and bcrypt.check_password_hash(user.password, password):
+        user.name = name
+
+        if newPass is not None:
+            user.password = bcrypt.generate_password_hash(newPass)
+
+        db.session.commit()
+        status = True
+
+    db.session.close()
+    return jsonify({'result': status})
+
+
 @app.route('/api/login', methods=['POST'])
 def login():
     json_data = request.json
@@ -68,6 +99,7 @@ def login():
         session['userid'] = user.id
         session['logged_in'] = True
         session['name'] = user.name
+        session['email'] = user.email
         usertype = UserType.query.filter_by(id=user.user_type).first().type;
         session['user_type'] = usertype;
         status = True
@@ -84,13 +116,14 @@ def logout():
     session.pop('name', None)
     session.pop('user_type', None)
     session.pop('userid', None)
+    session.pop('email', None)
     return jsonify({'result': 'success'})
 
 
 @app.route('/api/status')
 def status():
     if session.get('logged_in'):
-       return jsonify({'logged_in': session['logged_in'], 'name': session['name'], 'user_type': session['user_type']})
+       return jsonify({'logged_in': session['logged_in'], 'name': session['name'], 'user_type': session['user_type'], 'email': session['email']})
     else:
         return jsonify({'logged_in': False})
 

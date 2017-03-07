@@ -27,8 +27,9 @@
             <li class="nav-item">
               <a href="#/" class="nav-link" ng-class="{'active': isActive('/')}">Home</a>
             </li>
-            <li>
-              <span class="nav-link" ng-show="user.loggedin">|</span>
+            <li ng-show="user.loggedin">
+              <hr class="hidden-md-up">
+              <span class="nav-link hidden-sm-down">|</span>
             </li>
             <li class="nav-item" ng-show="user.author">
               <a href="#/author" class="nav-link" ng-class="{'active': isActive('/author')}">Author</a>
@@ -43,7 +44,8 @@
               <a href="#/rate" class="nav-link" ng-class="{'active': isActive('/rate')}">Rate</a>
             </li>
             <li class="nav-item" ng-show="user.admin">
-              <span class="nav-link">|</span>
+              <hr class="hidden-md-up">
+              <span class="nav-link hidden-sm-down">|</span>
             </li>
             <li class="nav-item" ng-show="user.admin">
               <a href="#/admin" class="nav-link" ng-class="{'active': isActive('/admin')}">Admin</a>
@@ -58,12 +60,23 @@
               <a href="#/admin/users" class="nav-link" ng-class="{'active': isActive('/admin/users')}">Users</a>
             </li>
           </ul>
-          <div class="navbar-nav nav-item float-xs-right" ng-hide="user.loggedin">
+          <div class="navbar-nav nav-item" ng-hide="user.loggedin">
               <a href="#/login" class="nav-link" ng-class="{'active': isActive('/login')}">Login</a>
           </div>
-          <div class="navbar-nav nav-item float-xs-right" ng-show="user.loggedin" ng-controller="logoutController">
-              <a href="#" ng-click='logout()' class="nav-link">Logout</a>
-          </div>
+          <ul class="navbar-nav nav-item" ng-show="user.loggedin" ng-controller="logoutController">
+              <li class="nav-item hidden-md-up">
+                  <hr>
+              </li>
+              <li class="nav-item">
+                <a href="#/account" class="nav-link">Account</a>
+              </li>
+              <li class="nav-item hidden-sm-down">
+                  <span class="nav-link">|</span>
+              </li>
+              <li class="nav-item">
+                    <a href="#" ng-click='logout()' class="nav-link">Logout</a>
+              </li>
+          </ul>
         </div>
       </nav>
     

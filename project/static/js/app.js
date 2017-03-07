@@ -67,6 +67,11 @@ myApp.config(function ($routeProvider) {
       controller: 'scriptController',
       access: {restricted: true, type: 'producer'}
     })
+    .when('/account', {
+      templateUrl: 'static/partials/account.html',
+      controller: 'accountController',
+      access: {restricted: true, type: 'all'}
+    })
     .otherwise({
       redirectTo: '/'
     });
@@ -83,7 +88,7 @@ myApp.run(function ($rootScope, $location, $route, AuthService) {
       AuthService.getUserStatus()
       .then(function(){
       
-        $rootScope.user = {admin: AuthService.isAdmin(), loggedin: AuthService.isLoggedIn(), user: AuthService.isUser(), producer: AuthService.isProducer(), author: AuthService.isAuthor()};
+        $rootScope.user = {admin: AuthService.isAdmin(), loggedin: AuthService.isLoggedIn(), user: AuthService.isUser(), producer: AuthService.isProducer(), author: AuthService.isAuthor(), name: AuthService.getUserName(), email: AuthService.getUserEmail()};
         
         $rootScope.ratingStatus = [
                         { 'id' : 'none', 'description' : 'Not Rated'}, 
@@ -109,7 +114,7 @@ myApp.run(function ($rootScope, $location, $route, AuthService) {
                     ];
 
         $rootScope.username = AuthService.getUserName();
-        
+
         if (next.access && next.access.restricted && AuthService.isAuthor() && next.access.type != 'author')
         {
             $location.path('/author');

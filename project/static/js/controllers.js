@@ -39,7 +39,39 @@ angular.module('myApp').controller('authorController',
   ['$scope', '$location', 'AuthService',
   function ($scope, $location, AuthService) {
 
-    
+
+}]);
+
+
+angular.module('myApp').controller('accountController',
+  ['$scope', '$location', 'AuthService', 'AccountService', '$route',
+  function ($scope, $location, AuthService, AccountService, $route) {
+
+      $scope.updateUser = function () {
+
+        console.log("updating user");
+
+        if ($scope.user.newPass != $scope.user.newPassConfirm) {
+                $scope.error = true;
+                $scope.errorMessage = "New passwords don't match";
+        } else {
+                AccountService.update($scope.user)
+                    .then(function () {
+
+                        AuthService.logout()
+                        .then(function () {
+                          $location.path('/login');
+                        });
+                    })
+                    .catch(function () {
+                        $scope.error = true;
+                        $scope.errorMessage = "Failed to update account";
+                        $scope.disabled = false;
+                        $scope.registerForm = {};
+                    });
+        }
+    }
+
 
 }]);
 
@@ -463,7 +495,7 @@ angular.module('myApp').controller('logoutController',
       // call logout from service
       AuthService.logout()
         .then(function () {
-          $location.path('/');
+          $location.path('/login');
         });
 
     };
