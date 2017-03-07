@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # manage.py
 
 from flask_script import Manager
