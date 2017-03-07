@@ -10,6 +10,8 @@ import random
 from loremipsum import get_sentences
 
 
+
+
 migrate = Migrate(app, db)
 manager = Manager(app)
 

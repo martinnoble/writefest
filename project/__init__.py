@@ -9,16 +9,42 @@ import json
 from werkzeug.utils import secure_filename
 import uuid
 from project.unique_filename import unique_file_name
+import logging
+from logging.handlers import RotatingFileHandler
 
 # config
 
 app = Flask(__name__)
 app.config.from_object(BaseConfig)
 
+LOGGING_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+handler = RotatingFileHandler('logs/writefest.log', maxBytes=10000, backupCount=5)
+handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter(LOGGING_FORMAT)
+handler.setFormatter(formatter)
+
+app.logger.addHandler(handler)
+
+access_logger = logging.getLogger('werkzeug')
+handler = logging.FileHandler('logs/access.log')
+access_logger.addHandler(handler)
+
+
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 
 from project.models import User, UserType, Season, Question, Script, ScriptStatus, File, Rating, Comments
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    app.logger.error('Server Error: %s', (error))
+    return render_template('500.htm'), 500
+
+@app.errorhandler(Exception)
+def unhandled_exception(e):
+    app.logger.error('Unhandled Exception: %s', (e))
+    return render_template('500.htm'), 500
 
 
 # routes
@@ -92,6 +118,8 @@ def account():
 
 @app.route('/api/login', methods=['POST'])
 def login():
+    app.logger.info("Login")
+
     json_data = request.json
     email = json_data['email'].lower()
     user = User.query.filter_by(email=email).first()
