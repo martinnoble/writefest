@@ -35,15 +35,7 @@ db = SQLAlchemy(app)
 
 from project.models import User, UserType, Season, Question, Script, ScriptStatus, File, Rating, Comments
 
-@app.errorhandler(500)
-def internal_server_error(error):
-    app.logger.error('Server Error: %s', (error))
-    return render_template('500.htm'), 500
 
-@app.errorhandler(Exception)
-def unhandled_exception(e):
-    app.logger.error('Unhandled Exception: %s', (e))
-    return render_template('500.htm'), 500
 
 
 # routes
@@ -328,7 +320,7 @@ def script():
         if action == 'add':
             print("Adding new script")
         
-            script = Script(author=author, season=scriptdata['season'], status=scriptdata['status'], name=scriptdata['name'])
+            script = Script(author=author, season=scriptdata['season'], status=scriptdata['status'], name=scriptdata['name'], pageCount=scriptdata['pageCount'])
             db.session.add(script)
             db.session.commit()
             print(script)
@@ -357,7 +349,7 @@ def script():
             script.author = scriptdata['author']
             script.season = scriptdata['season']
             script.status = scriptdata['status']
-            
+            script.pageCount = scriptdata['pageCount']
             if dbfilename:
                 file = File(script=script.id, filename=dbfilename)
                 db.session.add(file)
