@@ -136,25 +136,28 @@ angular.module('myApp').controller('producerController',
                         user.total++;
                         script.ratingTotal += finalRatings[0].rating;
                         script.ratings++;
-                    }
-                    
-                    otherRatings = filterFilter($scope.producerdata.ratings, {script_id: script.id, user_id: user.id}, true);
-                
-                    if (otherRatings.length > 0) {
-                        for (k=0; k < otherRatings.length; k++) {
-                            if (otherRatings[k].rating > 0 && otherRatings[k].question_id != $scope.producerdata.finalQId) {
-                                script.otherTotal += otherRatings[k].rating;
-                                script.others++;
+
+                        otherRatings = filterFilter($scope.producerdata.ratings, {script_id: script.id, user_id: user.id}, true);
+
+                        if (otherRatings.length > 0) {
+                            for (k=0; k < otherRatings.length; k++) {
+                                if (otherRatings[k].rating > 0 && otherRatings[k].question_id != $scope.producerdata.finalQId) {
+                                    script.otherTotal += otherRatings[k].rating;
+                                    script.others++;
+                                }
                             }
                         }
+
+                        comments = filterFilter($scope.producerdata.comments, {script_id: script.id, user_id: user.id}, true);
+
+                        if (comments.length > 0) {
+                            script.durations++;
+                            script.totalDuration += comments[0].duration;
+                        }
+
                     }
-                    
-                    comments = filterFilter($scope.producerdata.comments, {script_id: script.id, user_id: user.id}, true);
-                    
-                    if (comments.length > 0) {
-                        script.durations++;
-                        script.totalDuration += comments[0].duration;
-                    }
+
+
                     
                 }
                 
@@ -194,30 +197,32 @@ angular.module('myApp').controller('producerController',
                 
                     if (finalRatings.length > 0 && finalRatings[0].rating > 0) {
                         sumOfSquareRatingDifs += Math.pow(finalRatings[0].rating - finalAverage, 2);
-                    }
-                    
-                    otherRatings = filterFilter($scope.producerdata.ratings, {script_id: script.id, user_id: user.id}, true);
-                
-                    if (otherRatings.length > 0) {
-                        for (k=0; k < otherRatings.length; k++) {
-                            if (otherRatings[k].rating > 0 && otherRatings[k].question_id != $scope.producerdata.finalQId) {
-                                sumOfSquareRatingDifs += Math.pow(otherRatings[k].rating - otherAverage, 2);
+
+                        otherRatings = filterFilter($scope.producerdata.ratings, {script_id: script.id, user_id: user.id}, true);
+
+                        if (otherRatings.length > 0) {
+                            for (k=0; k < otherRatings.length; k++) {
+                                if (otherRatings[k].rating > 0 && otherRatings[k].question_id != $scope.producerdata.finalQId) {
+                                    sumOfSquareRatingDifs += Math.pow(otherRatings[k].rating - otherAverage, 2);
+                                }
                             }
+                        }
+
+
+                        ratings = filterFilter($scope.producerdata.ratings, {script_id: script.id, user_id: user.id}, true);
+
+                        if (ratings.length > 0 && ratings[0].rating > 0) {
+                            sumOfSquareRatingDifs += Math.pow(ratings[0].rating - script.average, 2);
+                        }
+
+                        comments = filterFilter($scope.producerdata.comments, {script_id: script.id, user_id: user.id}, true);
+
+                        if (comments.length > 0) {
+                            sumOfSquareDurDifs += Math.pow(comments[0].duration - script.averageDuration, 2);
                         }
                     }
                     
-                    
-                    ratings = filterFilter($scope.producerdata.ratings, {script_id: script.id, user_id: user.id}, true);
-            
-                    if (ratings.length > 0 && ratings[0].rating > 0) {
-                        sumOfSquareRatingDifs += Math.pow(ratings[0].rating - script.average, 2);       
-                    }
-                
-                    comments = filterFilter($scope.producerdata.comments, {script_id: script.id, user_id: user.id}, true);
-                
-                    if (comments.length > 0) {
-                        sumOfSquareDurDifs += Math.pow(comments[0].duration - script.averageDuration, 2);
-                    }
+
                 }
                 
                 script.ratingSD = Math.sqrt(sumOfSquareRatingDifs / (script.ratings + script.others) );
