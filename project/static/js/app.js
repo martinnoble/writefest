@@ -101,7 +101,7 @@ myApp.run(function ($rootScope, $location, $route, AuthService) {
                     { 'id': 3, 'answer':'Good' },
                     { 'id': 2, 'answer':'Satisfactory' },
                     { 'id': 1, 'answer':'Needs Work' },
-                    { 'id': 0, 'answer':'N/A' },
+                    /*{ 'id': 0, 'answer':'N/A' },*/
                     { 'id': null, 'answer':'Not Rated' }
                 ];
     
