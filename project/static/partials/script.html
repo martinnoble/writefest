@@ -222,9 +222,9 @@
                 </td>
                 <td>
                     <span class="hidden-md-up heading">File: </span>
-                    <a href="/script/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-upload_date')[0].filename }}" target="_blank">Open</a>
+                    <a href="/script/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-id')[0].filename }}" target="_blank">Open</a>
                     <span class="hidden-md-up"> | </span>
-                    <a href="/script/download/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-upload_date')[0].filename }}">Download</a>
+                    <a href="/script/download/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-id')[0].filename }}">Download</a>
                 </td>
                 <td>
                     <span class="hidden-md-up heading">Author: </span>
