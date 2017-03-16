@@ -431,14 +431,14 @@ def rating():
             duration = ratingdata['duration']
 
         if comment:
-            print("old: " + unicode(comment))
+            #print("old: " + unicode(comment))
             comment.notes = notes
             comment.feedback = feedback
             comment.duration = ratingdata['duration']
         else:
             comment = Comments(user=session['userid'], script=script, notes=notes, feedback=feedback, duration=duration)
             db.session.add(comment)
-        print("new: " + unicode(comment))
+        #print("new: " + unicode(comment))
         
         for key in ratingdata:
             print("Question: " + key);
