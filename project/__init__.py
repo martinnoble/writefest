@@ -431,14 +431,14 @@ def rating():
             duration = ratingdata['duration']
 
         if comment:
-            print("old: " + str(comment))
+            print("old: " + unicode(comment))
             comment.notes = notes
             comment.feedback = feedback
             comment.duration = ratingdata['duration']
         else:
             comment = Comments(user=session['userid'], script=script, notes=notes, feedback=feedback, duration=duration)
             db.session.add(comment)
-        print("new: " + str(comment))
+        print("new: " + unicode(comment))
         
         for key in ratingdata:
             print("Question: " + key);
@@ -452,7 +452,7 @@ def rating():
                 rating = Rating.query.filter_by(user_id=session['userid'], script_id=script, question_id=key).first()
             
                 if rating:
-                    print("old: " + str(rating))
+                    print("old: " + unicode(rating))
                 
                     if (ratingdata[key] is None):
                         db.session.delete(rating)
@@ -463,7 +463,7 @@ def rating():
                         rating = Rating(user=session['userid'], script=script, question=key, rating=ratingdata[key])
                         db.session.add(rating)
             
-            print("new: " + str(rating))
+            print("new: " + unicode(rating))
             
          
         result = True

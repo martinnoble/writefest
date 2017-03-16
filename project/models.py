@@ -44,7 +44,7 @@ class Comments(db.Model):
                 }
     
     def __repr__(self):
-        return '<Comments {0}: User:{1} Script:{2} Notes:{3}, Feedback:{4}, Duration:{5}>'.format(self.id, self.user_id, self.script_id, self.notes, self.feedback, self.duration)
+        return u'<Comments {0}: User:{1} Script:{2} Notes:{3}, Feedback:{4}, Duration:{5}>'.format(self.id, self.user_id, self.script_id, self.notes, self.feedback, self.duration)
 
 
 class Rating(db.Model):
@@ -76,7 +76,7 @@ class Rating(db.Model):
                 }
     
     def __repr__(self):
-        return '<Rating {0}: User:{1} Script:{2} Question:{3} = Rating:{4}>'.format(self.id, self.user_id, self.script_id, self.question_id, self.rating)
+        return u'<Rating {0}: User:{1} Script:{2} Question:{3} = Rating:{4}>'.format(self.id, self.user_id, self.script_id, self.question_id, self.rating)
 
 class ScriptStatus(db.Model):
 
@@ -99,7 +99,7 @@ class ScriptStatus(db.Model):
                 }
     
     def __repr__(self):
-        return '<ScriptStatus {0}: {1}>'.format(self.status, self.description)
+        return u'<ScriptStatus {0}: {1}>'.format(self.status, self.description)
 
 class Script(db.Model):
 
@@ -139,7 +139,7 @@ class Script(db.Model):
                 }
                 
     def __repr__(self):
-        return "<Script {0}: {1}>".format(self.id, self.name)
+        return u"<Script {0}: {1}>".format(self.id, self.name)
 
 class File(db.Model):
 
@@ -163,7 +163,7 @@ class File(db.Model):
                 }
                 
     def __repr__(self):
-        return "<File {0}: {1} -> {2}>".format(self.id, self.filename, self.script)
+        return u"<File {0}: {1} -> {2}>".format(self.id, self.filename, self.script)
 
 class UserType(db.Model):
 
@@ -181,7 +181,7 @@ class UserType(db.Model):
                 }
     
     def __repr__(self):
-        return "<UserType {0}>".format(self.type)
+        return u"<UserType {0}>".format(self.type)
 
 class User(db.Model):
 
@@ -228,7 +228,7 @@ class User(db.Model):
                 }
 
     def __repr__(self):
-        return "<User {0}: {1} | {2} - Rate:{3}>".format(self.id, self.name, self.email, self.can_rate)
+        return u"<User {0}: {1} | {2} - Rate:{3}>".format(self.id, self.name, self.email, self.can_rate)
 
 class Question(db.Model):
 
@@ -256,7 +256,7 @@ class Question(db.Model):
                 }
     
     def __repr__(self):
-        return '<Question {0}:{1}:{2}:{3}>'.format(self.id, self.question, self.description, self.type)
+        return u'<Question {0}:{1}:{2}:{3}>'.format(self.id, self.question, self.description, self.type)
         
 class Season(db.Model):
 
@@ -283,5 +283,5 @@ class Season(db.Model):
                 }
 
     def __repr__(self):
-        return '<Season {0}:{1} -> {2}>'.format(self.id, self.start_date, self.end_date)
+        return u'<Season {0}:{1} -> {2}>'.format(self.id, self.start_date, self.end_date)
 
