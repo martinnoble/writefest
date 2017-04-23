@@ -82,6 +82,10 @@ table .btn, .ratingData .btn {
     color: green;
 }
 
+.prodTable .rated.red {
+    color: red;
+}
+
 .prodTable .fa-times {
     color: red;
 }

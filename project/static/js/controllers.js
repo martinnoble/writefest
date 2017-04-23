@@ -132,7 +132,7 @@ angular.module('myApp').controller('producerController',
                 
                     finalRatings = filterFilter($scope.producerdata.ratings, {script_id: script.id, user_id: user.id, question_id: $scope.producerdata.finalQId}, true);
                 
-                    if (finalRatings.length > 0 && finalRatings[0].rating > 0) {
+                    if (finalRatings.length > 0) {
                         user.total++;
                         script.ratingTotal += finalRatings[0].rating;
                         script.ratings++;

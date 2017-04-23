@@ -455,7 +455,9 @@ def rating():
                     print("old: " + unicode(rating))
                 
                     if (ratingdata[key] is None):
+                        print("new: deleted")
                         db.session.delete(rating)
+                        rating = None
                     else:
                         rating.rating = ratingdata[key]
                 else:

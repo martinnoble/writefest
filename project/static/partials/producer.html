@@ -255,8 +255,9 @@
                     <td ng-repeat="user in producerdata.users" ng-hide="ratingInfo == 'off'" class="text-xs-center">
                         <div ng-show="ratingInfo == 'rating'">
                             <span class="rated" 
-                                ng-init="count = ( producerdata.ratings | filter:{script_id:script.id, user_id:user.id, question_id:producerdata.finalQId}:true | filter:greaterThan('rating',0) ).length; rating = ( producerdata.ratings | filter:{script_id:script.id, user_id:user.id, question_id:producerdata.finalQId}:true )[0]" 
-                                ng-show="count > 0">
+                                ng-init="count = ( producerdata.ratings | filter:{script_id:script.id, user_id:user.id, question_id:producerdata.finalQId}:true ).length; rating = ( producerdata.ratings | filter:{script_id:script.id, user_id:user.id, question_id:producerdata.finalQId}:true )[0]"
+                                ng-show="count > 0"
+                                ng-class="{red: rating.rating == 0}">
                                 {{ (answersType2 | filter:{id:rating.rating})[0].answer }}
                             </span>
                         
