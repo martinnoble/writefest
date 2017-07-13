@@ -9,12 +9,48 @@
                 <th>Year</th>
                 <th>Start Date</th>
                 <th>End Date</th>
+		<th></th>
             </tr>
+	    <tr>
+                <td>New</td>
+                <td>
+                    <input class="form-control" type="text" data-provide="datepicker" data-date-format="yyyy" data-date-min-view-mode="years" max-view-mode="years" ng-model="newSeason.year"/>
+                </td>
+		<td>
+			<input class="form-control" type="text" data-provide="datepicker" data-date-format="M d, yyyy" ng-model="newSeason.start"/>
+		</td>
+		<td>
+			<input class="form-control" type="text" data-provide="datepicker" data-date-format="M d, yyyy" ng-model="newSeason.end"/>
+		</td>
+
+                <td>
+                    <button class="btn btn-outline-success" ng-click="update('seasons', newSeason, 'add')">Save</button>           
+            	</td>
+            </tr>
+
             <tr ng-repeat="season in admindata.seasons">
                 <td>{{ season.id }}</td>
-                <td>{{ season.year }}</td>
-                <td>{{ season.start_date }}</td>
-                <td>{{ season.end_date }}</td>
+		<td>{{ season.year }}</td>
+                <td>
+			<div ng-hide="editingData[season.id]">{{ season.start_javascript | date : 'mediumDate' }}</div>
+			<div ng-show="editingData[season.id]">
+				<input class="form-control" type="text" data-provide="datepicker" data-date-format="M d, yyyy" ng-model="season.start_date"/>
+			</div>
+		</td>
+                <td>
+			<div ng-hide="editingData[season.id]">{{ season.end_javascript | date : 'mediumDate' }}</div>
+			<div ng-show="editingData[season.id]">
+				<input class="form-control" type="text" data-provide="datepicker" data-date-format="M d, yyyy" ng-model="season.end_date"/>
+			</div>
+
+		</td>
+		<td>
+                    <button class="btn btn-outline-secondary" ng-hide="editingData[season.id]" ng-click="modify(season)">Modify</button>
+                    <button class="btn btn-outline-primary" ng-show="editingData[season.id]" ng-click="cancel(season)">Cancel</button>
+                    <button class="btn btn-outline-success" ng-show="editingData[season.id]" ng-click="update('seasons', season, 'update')">Save</button>
+                    <button class="btn btn-outline-danger" ng-show="editingData[season.id]" confirmed-click="update('seasons', season, 'delete')" ng-confirm-click="Are you sure?">Delete</buton>
+                </td>
+
             </tr>
         </table>
     </div>

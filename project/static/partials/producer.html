@@ -133,8 +133,9 @@
                     <th>
                         <a href="" ng-click="sortBy = 'name'; sortReverse = !sortReverse">
                             Script
-                            <span ng-show="sortBy == 'name' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortBy == 'name' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-show="sortBy == 'name' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'name' && sortReverse" class="fa fa-sort-asc"></span>
+			    <span ng-show="sortBy != 'name'" class="fa fa-sort"></span>
                         </a>
                     </th>
                     
@@ -145,48 +146,54 @@
                     <th ng-show="ratingInfo == 'off'">
                         <a href="" ng-click="sortBy = 'rank'; sortReverse = !sortReverse">
                             Ranking
-                            <span ng-show="sortBy == 'rank' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortBy == 'rank' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-show="sortBy == 'rank' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'rank' && sortReverse" class="fa fa-sort-asc"></span>
+			    <span ng-show="sortBy != 'rank'" class="fa fa-sort"></span>
                         </a>
                     </th>
                     
                     <th>
                         <a href="" ng-click="sortBy = 'average'; sortReverse = !sortReverse">
                             Rating
-                            <span ng-show="sortBy == 'average' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortBy == 'average' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-show="sortBy == 'average' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'average' && sortReverse" class="fa fa-sort-asc"></span>
+			    <span ng-show="sortBy != 'average'" class="fa fa-sort"></span>
                         </a>
                     </th>
                     
                     <th ng-show="ratingInfo != 'rating'">
                         <a href="" ng-click="sortBy = 'averageDuration'; sortReverse = !sortReverse">
                             Duration
-                            <span ng-show="sortBy == 'averageDuration' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortBy == 'averageDuration' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-show="sortBy == 'averageDuration' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'averageDuration' && sortReverse" class="fa fa-sort-asc"></span>
+			    <span ng-show="sortBy != 'averageDuration'" class="fa fa-sort"></span>
                         </a>
                     </th>
                     
                     <th ng-show="ratingInfo == 'off'">
                         <a href="" ng-click="sortBy = 'ratings'; sortReverse = !sortReverse">
                             Count
-                            <span ng-show="sortBy == 'ratings' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortBy == 'ratings' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-show="sortBy == 'ratings' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'ratings' && sortReverse" class="fa fa-sort-asc"></span>
+			    <span ng-show="sortBy != 'ratings'" class="fa fa-sort"></span>
                         </a>
                     </th>
                     
                     <th ng-show="stats == 'on'">
                         <a href="" ng-click="sortBy = 'ratingSD'; sortReverse = !sortReverse">
                             Rating Spread
-                            <span ng-show="sortBy == 'ratingSD' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortBy == 'ratingSD' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-show="sortBy == 'ratingSD' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'ratingSD' && sortReverse" class="fa fa-sort-asc"></span>
+			    <span ng-show="sortBy != 'ratingSD'" class="fa fa-sort"></span>
                         </a>
                     </th>
                     
                     <th ng-show="stats == 'on'">
                         <a href="" ng-click="sortBy = 'durationSD'; sortReverse = !sortReverse">
                             Duration Spread
-                            <span ng-show="sortBy == 'durationSD' && !sortReverse" class="fa fa-caret-down"></span>
-                            <span ng-show="sortBy == 'durationSD' && sortReverse" class="fa fa-caret-up"></span>
+                            <span ng-show="sortBy == 'durationSD' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'durationSD' && sortReverse" class="fa fa-sort-asc"></span>
+			    <span ng-show="sortBy != 'durationSD'" class="fa fa-sort"></span>
                         </a>
                     </th>
                     

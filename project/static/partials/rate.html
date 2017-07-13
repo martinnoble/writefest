@@ -40,11 +40,17 @@
                         {{ script.rating }}
                     </td>
                     <td>
-                        <span class="hidden-md-up heading">File: </span>
-                        <a href="/script/{{ ((ratingdata.files | filter : {'script': script.id}) | orderBy:'-id')[0].filename }}" target="_blank">Open</a>
-                        <span class="hidden-md-up"> | </span>
-                        <a href="/script/download/{{ ((ratingdata.files | filter : {'script': script.id}) | orderBy:'-id')[0].filename }}">Download</a>
-                    </td>
+                    	<span class="hidden-md-up heading">File: </span>
+		    	<a href="/script/{{ ((ratingdata.files | filter : {'script': script.id}) | orderBy:'-id')[0].filename }}" target="_blank">
+			    <span class="fa fa-folder-open hidden-sm-down"></span>
+			    <span class="hidden-md-up">Open</span>
+		    	</a>
+                    	<span class=""> | </span>
+		    	<a href="/script/download/{{ ((ratingdata.files | filter : {'script': script.id}) | orderBy:'-id')[0].filename }}">
+			    <span class="fa fa-download hidden-sm-down"></span>
+			    <span class="hidden-md-up">Download</span>
+		    	</a>
+		    </td>
                     <td>
                         <span class="hidden-md-up heading">Pages: </span>
                         {{ script.pageCount }}

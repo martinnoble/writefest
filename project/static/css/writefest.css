@@ -92,11 +92,18 @@ table .btn, .ratingData .btn {
 
 .prodTable th a {
     white-space: nowrap;
+    color: #292b2c !important;
+    text-decoration: none !important;
+}
+
+.prodTable .col-file {
+    min-width: 75px;
 }
 
 .no-wrap {
     white-space: nowrap;
 }
+
 
 @media (min-width: 768px) {
     .row-striped:nth-of-type(odd) {

@@ -11,6 +11,7 @@ import uuid
 from project.unique_filename import unique_file_name
 import logging
 from logging.handlers import RotatingFileHandler
+import datetime
 
 # config
 
@@ -227,7 +228,51 @@ def users():
     
     
     return jsonify({'result': result})
+   
+@app.route('/api/admin/seasons', methods=['POST'])
+def seasons():
+
+    print("Processing Season add")
+    result = True
+    if session['user_type'] != 'admin':
+        result = False
+    else:
+        json_data = request.json
+        print(json_data)
+        action = json_data['action']
+        season_data = json_data['data']
     
+        if action == 'update':
+            print("Updating season")
+            season = Season.query.filter_by(id=season_data['id']).first()
+            season.start_date = datetime.datetime.strptime(season_data['start_date'], '%b %d, %Y')
+            season.end_date = datetime.datetime.strptime(season_data['end_date'], '%b %d, %Y')
+            
+        
+        elif action == 'add':
+            print("Adding season")
+            
+            startdate = datetime.datetime.strptime(season_data['start'], '%b %d, %Y')
+            enddate = datetime.datetime.strptime(season_data['end'], '%b %d, %Y')
+            print("Start: (" +  season_data['start'] + ") " + str(startdate) + " End: (" + season_data['end'] + ") " + str(enddate))
+
+            db.session.add(Season(year=season_data['year'], start_date=startdate, end_date=enddate))
+        
+        elif action == 'delete':
+            print("Deleting season")
+            season = Season.query.filter_by(id=season_data['id']).first()
+            print(season)
+            db.session.delete(season)
+            
+        else:
+            result = False
+    
+        if result:
+            db.session.commit()    
+    
+    
+    return jsonify({'result': result})
+
 
 
 @app.route('/api/admin')

@@ -21,6 +21,13 @@
                         <input class="form-control" type="text" ng-model="newQuestion.question"/>
                     </td>
                     <td>
+                        <input class="form-control" type="text" ng-model="newQuestion.description"/>
+                    </td>
+		    <td>
+                        <select class="form-control" ng-model="newQuestion.type" ng-options="item.id as item.type for item in questiontypes">
+                        </select>
+		    </td>
+                    <td>
                         <button class="btn btn-outline-success" ng-click="update('questions', newQuestion, 'add')">Save</button>           
                     </td>
                 </tr>

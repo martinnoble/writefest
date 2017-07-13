@@ -602,14 +602,18 @@ angular.module('myApp').controller('adminController',
                 $route.reload();
             };
             
-            $scope.newQuestion = {id: 0, question: ''};
+            $scope.newQuestion = {id: 0, question: '', description: '', type: 1};
             
             
             $scope.update = function(type, data, action){
                 AdminService.update(type, data, action)
                     .then(function () {
-                        $('#modalNewUser').modal('hide');
-                        $scope.updated = true;
+			if (type == 'users') {
+                            $('#modalNewUser').modal('hide');
+                            $scope.updated = true;
+			} else {
+			    $route.reload();
+			}
                     })
                     .catch(function () {
                         $scope.error = true;

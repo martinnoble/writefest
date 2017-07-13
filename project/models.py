@@ -2,6 +2,8 @@
 
 
 import datetime
+import time
+import calendar
 from project import db, bcrypt
 from flask import jsonify
 import uuid
@@ -129,7 +131,8 @@ class Script(db.Model):
                 'season': self.season,
                 'author': self.author,
                 'pageCount': self.pageCount,
-                'submission_date': self.submission_date 
+                'submission_date': self.submission_date,
+                'submission_javascript' : calendar.timegm(self.submission_date.timetuple()) * 1000,
                 }
                 
     def dumpNames(self):
@@ -276,10 +279,14 @@ class Season(db.Model):
         return self.id
 
     def dump(self):
+
+
         return {'id': self.id, 
                 'year': self.year, 
-                'start_date' : self.start_date, 
-                'end_date': self.end_date
+                'start_date' : self.start_date.strftime("%b %d, %Y"), 
+                'start_javascript' : calendar.timegm(self.start_date.timetuple()) * 1000,
+                'end_date': self.end_date.strftime("%b %d, %Y"),
+                'end_javascript' : calendar.timegm(self.end_date.timetuple()) * 1000,
                 }
 
     def __repr__(self):
