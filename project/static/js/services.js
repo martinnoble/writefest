@@ -267,8 +267,14 @@ angular.module('myApp').factory('AuthService',
       isAdmin: isAdmin,
       isProducer: isProducer,
       isUser: isUser,
-      isAuthor: isAuthor
+      isAuthor: isAuthor,
+      getYear: getYear,
+      reset: reset
     });
+
+    function getYear() {
+	return user.year;
+    }
 
     function isLoggedIn() {
       return user.logged_in;
@@ -307,6 +313,8 @@ angular.module('myApp').factory('AuthService',
       $http.post('/api/login', {email: email, password: password})
         // handle success
         .success(function (data, status) {
+
+
           if(status === 200 && data.result){
             user.logged_in = true;
             user.name = data.name;
@@ -384,7 +392,9 @@ angular.module('myApp').factory('AuthService',
       return $http.get('/api/status')
       // handle success
       .success(function (data) {
-        if(data.logged_in){
+	user.year = data.year;
+        
+	if(data.logged_in){
           user.logged_in = true;
           user.name = data.name;
           user.email = data.email;
@@ -394,6 +404,7 @@ angular.module('myApp').factory('AuthService',
           user.name = '';
           user.email = '';
           user.user_type = '';
+
         }
       })
       // handle error
@@ -404,6 +415,30 @@ angular.module('myApp').factory('AuthService',
       });
     }
 
+    function reset(email, key, password) {
+
+      // create a new instance of deferred
+      var deferred = $q.defer();
+
+      // send a post request to the server
+      $http.post('/api/reset', {email: email, key: key, password: password})
+        // handle success
+        .success(function (data, status) {
+          if(status === 200 && data.result){
+            deferred.resolve();
+          } else {
+            deferred.reject();
+          }
+        })
+        // handle error
+        .error(function (data) {
+          deferred.reject();
+        });
+
+      // return promise object
+      return deferred.promise;
+
+    }
 
 
 }]);

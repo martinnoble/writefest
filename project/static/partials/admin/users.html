@@ -57,6 +57,18 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        Activated?:
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" ng-model="newUser.activated">
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </form>
           </div>
       </div>
@@ -140,6 +152,13 @@
                     </a>
                 </th>
                 <th>
+                    <a href="" ng-click="sortBy = 'activated'; sortReverse = !sortReverse">
+                        Activated?
+                        <span ng-show="sortBy == 'activated' && !sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="sortBy == 'activated' && sortReverse" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+                <th>
                     <button class="btn btn-outline-primary" data-toggle="modal" data-target="#modalNewUser" ng-click="resetNewUser()">Add</button>
                 </th>
             </tr>
@@ -159,6 +178,9 @@
                 </td>
                 <td>
                     {{ user.can_rate }}
+                </td>
+                <td>
+                    {{ user.activated }}
                 </td>
                 <td>
                     <button class="btn btn-outline-secondary" ng-click="modifyUser(user)">

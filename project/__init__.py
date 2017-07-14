@@ -1,7 +1,7 @@
 # project/__init__.py
 
 import os
-from flask import Flask, request, jsonify, session, send_from_directory
+from flask import Flask, request, jsonify, session, send_from_directory, redirect
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from project.config import BaseConfig
@@ -12,6 +12,10 @@ from project.unique_filename import unique_file_name
 import logging
 from logging.handlers import RotatingFileHandler
 import datetime
+import smtplib
+from email.mime.text import MIMEText
+import uuid
+
 
 # config
 
@@ -36,8 +40,37 @@ db = SQLAlchemy(app)
 
 from project.models import User, UserType, Season, Question, Script, ScriptStatus, File, Rating, Comments
 
+mailhost = "localhost"
+mailfrom = "writefest@martinnoble.com"
 
 
+def send_email(to, subject, template, content):
+
+    print("Sending email to: " + to)
+
+    template_path = os.path.join(app.config['EMAIL_TEMPLATE_PATH'], template)
+
+
+    print(template_path)
+
+    html_content = open(template_path + ".html", 'rb').read()
+
+
+
+    print("read email content");
+
+    msg = MIMEText(html_content.format(**content), 'html')
+    msg['Subject'] = subject
+    msg['From'] = mailfrom
+    msg['To'] = to
+
+    print("performing smtp send")
+
+    s = smtplib.SMTP(mailhost)
+    s.sendmail(mailfrom, [to], msg.as_string())
+    s.quit()
+
+    print("email sending complete")
 
 # routes
 
@@ -62,17 +95,32 @@ def script_open(author, filename):
 def register():
     json_data = request.json
     email = json_data['email'].lower()
+    activation_key = str(uuid.uuid4())
+
     user = User(
         name=json_data['name'],
         email=email,
-        password=json_data['password']
+        password=json_data['password'],
+        activation_key=activation_key
     )
-    try:
-        db.session.add(user)
-        db.session.commit()
-        status = 'success'
-    except:
-        status = 'this user is already registered'
+
+    status = False
+
+    print("Registering user: " + email)
+
+    db.session.add(user)
+    db.session.commit()
+
+    print("Sending email")
+    activationurl = app.config['WEBSITE_HOST'] + "/activate/" + email + "/" + activation_key
+
+    email_content = {'year': '2017', 'firstname': json_data['name'].split(" ")[0], 'activateurl': activationurl}
+    print(email_content)
+    send_email(email, "Welcome to Writefest", "welcome", email_content)
+
+    print("done")
+    status = True
+
     db.session.close()
     return jsonify({'result': status})
 
@@ -115,7 +163,10 @@ def login():
     json_data = request.json
     email = json_data['email'].lower()
     user = User.query.filter_by(email=email).first()
-    if user and bcrypt.check_password_hash(user.password, json_data['password']):
+    status = False
+    
+    if user and bcrypt.check_password_hash(user.password, json_data['password']) and user.activated:
+        print("Login success")
         session['userid'] = user.id
         session['logged_in'] = True
         session['name'] = user.name
@@ -127,6 +178,7 @@ def login():
     else:
         print("ERROR: failed login")
         status = False
+
     return jsonify({'result': status})
 
 
@@ -142,10 +194,12 @@ def logout():
 
 @app.route('/api/status')
 def status():
+    curSeason = Season.query.order_by('-id').first()
+    year = curSeason.dump()['year']
     if session.get('logged_in'):
-       return jsonify({'logged_in': session['logged_in'], 'name': session['name'], 'user_type': session['user_type'], 'email': session['email']})
+        return jsonify({'logged_in': session['logged_in'], 'name': session['name'], 'user_type': session['user_type'], 'email': session['email'], 'year': year})
     else:
-        return jsonify({'logged_in': False})
+        return jsonify({'logged_in': False, 'year': year})
 
 @app.route('/api/admin/questions', methods=['POST'])
 def questions():
@@ -206,13 +260,14 @@ def users():
             user.email = user_data['email']
             user.user_type = user_data['user_type']
             user.can_rate = user_data['can_rate']
+            user.activated = user_data['activated']
             if user_data['password'] != "not-changed":
                 user.password = bcrypt.generate_password_hash(user_data['password'])
             
         
         elif action == 'add':
             print("Adding user")
-            db.session.add(User(name=user_data['name'], email=user_data['email'], user_type=user_data['user_type'], password=user_data['password'], can_rate=user_data['can_rate']))
+            db.session.add( User( name=user_data['name'], email=user_data['email'], user_type=user_data['user_type'], password=user_data['password'], can_rate=user_data['can_rate'], activated=user_data["activated"], activation_key=str(uuid.uuid4()) ) )
         
         elif action == 'delete':
             print("Deleting user")
@@ -228,7 +283,78 @@ def users():
     
     
     return jsonify({'result': result})
-   
+
+@app.route('/api/reset', methods=['POST'])
+def passwordreset():
+    print "Password reset processing"
+
+    email  = request.json['email']
+
+    user = User.query.filter_by(email=email).first()
+
+    result = False
+
+    if user is not None:
+
+        if request.json.has_key('key') and request.json.has_key('password'):
+            key = request.json['key']
+            password = request.json['password']
+            
+            if key == user.activation_key and password is not None:
+                user.activation_key = "used"
+                user.password = bcrypt.generate_password_hash(password)
+                db.session.commit()
+                result = True
+                print "Password reset complete"
+            else:
+                print "Activation key for " + email + " does not match"
+
+        else:
+
+            print "Sending reset password email"
+
+            actkey = str(uuid.uuid4())
+
+            user.activation_key = actkey
+            db.session.commit() 
+
+            reseturl = app.config['WEBSITE_HOST'] + "/#/passwordreset/" + email + "/" + actkey
+
+            email_content = {'firstname': user.name.split(" ")[0], 'reseturl': reseturl}
+    
+            send_email(email, "Writefest password reset", "passwordreset", email_content)
+
+            result = True
+    else:
+        print("Email " + email + " not found on any account")
+
+    return jsonify({'result': result})
+
+
+@app.route('/activate/<email>/<key>', methods=['GET'])
+def userconfirm(email, key):
+    user = User.query.filter_by(email=email).first()
+
+    result = False
+
+
+    if user is not None and user.activation_key == key:
+        print "Valid activation call"
+        user.activation_key = "used"
+        user.activated = True
+        db.session.commit()
+        result = True
+
+    else:
+        print "Invalid activation call"
+
+    if result:
+        return redirect(app.config['WEBSITE_HOST'] + "/#/login/activated", code=302)
+    else:
+        return redirect(app.config['WEBSITE_HOST'] + "/#/error/invalid-activation", code=302)
+
+
+
 @app.route('/api/admin/seasons', methods=['POST'])
 def seasons():
 

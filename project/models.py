@@ -197,21 +197,25 @@ class User(db.Model):
     registered_on = db.Column(db.DateTime, nullable=False)
     user_type = db.Column(db.Integer, nullable=False, default=1)
     can_rate = db.Column(db.Boolean, default=False)
+    activated = db.Column(db.Boolean, default=False)
+    activation_key = db.Column(db.String(32))
     
 
-    def __init__(self, name, email, password=str(uuid.uuid4()), user_type=1, can_rate = False):
+    def __init__(self, name, email, activation_key, password=str(uuid.uuid4()), user_type=1, can_rate = False, activated = False):
         self.name = name
         self.email = email
         self.password = bcrypt.generate_password_hash(password)
         self.registered_on = datetime.datetime.now()
         self.user_type = user_type
         self.can_rate = can_rate
+        self.activation_key = activation_key
+        self.activated = activated
 
     def is_authenticated(self):
         return True
 
     def is_active(self):
-        return True
+        return self.activated
 
     def is_anonymous(self):
         return False
@@ -227,7 +231,8 @@ class User(db.Model):
                 'user_type': self.user_type,
                 'user_type_name': UserType.query.filter_by(id=self.user_type).first().type,
                 'password' : 'not-changed',
-                'can_rate' : self.can_rate
+                'can_rate' : self.can_rate,
+                'activated' : self.activated,
                 }
 
     def __repr__(self):

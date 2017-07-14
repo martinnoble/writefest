@@ -26,9 +26,19 @@ myApp.config(function ($routeProvider) {
       controller: 'authorController',
       access: {restricted: true, type: 'author'}
     })
-    .when('/login', {
+    .when('/login/:status?', {
       templateUrl: 'static/partials/login.html',
       controller: 'loginController',
+      access: {restricted: false}
+    })
+    .when('/passwordreset', {
+      templateUrl: 'static/partials/passwordlost.html',
+      controller: 'lostController',
+      access: {restricted: false}
+    })
+    .when('/passwordreset/:email/:key', {
+      templateUrl: 'static/partials/passwordreset.html',
+      controller: 'resetController',
       access: {restricted: false}
     })
     .when('/logout', {
@@ -51,6 +61,12 @@ myApp.config(function ($routeProvider) {
             },
       controller: 'adminController',
       access: {restricted: true, type: 'admin'}
+    })
+    .when('/error/:errorcode', {
+	    templateUrl: function(urlattr){
+		    return 'static/partials/error/' + urlattr.errorcode + '.html';
+	    },
+	    access: {restricted: false}
     })
     .when('/rate', {
       templateUrl: 'static/partials/rate.html',
@@ -77,19 +93,45 @@ myApp.config(function ($routeProvider) {
     });
 });
 
-myApp.run(function ($rootScope, $location, $route, AuthService) {
+myApp.run(function ($rootScope, $location, $route, AuthService, $window) {
 
     $rootScope.isActive = function(viewLocation) {
         return viewLocation === $location.path();
     };
 
-  $rootScope.$on('$routeChangeStart',
-    function (event, next, current) {
-      AuthService.getUserStatus()
-      .then(function(){
-      
-        $rootScope.user = {admin: AuthService.isAdmin(), loggedin: AuthService.isLoggedIn(), user: AuthService.isUser(), producer: AuthService.isProducer(), author: AuthService.isAuthor(), name: AuthService.getUserName(), email: AuthService.getUserEmail()};
-        
+
+	$rootScope.error = false;
+	$rootScope.errorMessage = "";
+
+	$rootScope.$on('error', function(event, message) {
+		$rootScope.info = false;
+
+		$rootScope.error = true;
+		$rootScope.errorMessage = message;
+		
+		$window.scrollTo(0,0);
+	});
+
+	$rootScope.info = false;
+	$rootScope.infoMessage = "";
+
+	$rootScope.$on('info', function(event, message) {
+		$rootScope.error = false;
+
+		$rootScope.info = true;
+		$rootScope.infoMessage = message;
+
+		$window.scrollTo(0,0);
+	});
+
+	$rootScope.$on('clear', function() {
+		$rootScope.info = false;
+		$rootScope.infoMessage = "";
+		$rootScope.error = false;
+		$rootScope.errorMessage = "";
+		
+	});
+
         $rootScope.ratingStatus = [
                         { 'id' : 'none', 'description' : 'Not Rated'}, 
                         { 'id' : 'partial', 'description' : 'Partial Rating'},
@@ -112,6 +154,18 @@ myApp.run(function ($rootScope, $location, $route, AuthService) {
                    { 'id': 0, 'answer':'No' },
                    { 'id': null, 'answer':'Not Yet Rated' }
                     ];
+
+  $rootScope.$on('$routeChangeStart',
+    function (event, next, current) {
+      AuthService.getUserStatus()
+      .then(function(){
+      
+        $rootScope.user = {admin: AuthService.isAdmin(), loggedin: AuthService.isLoggedIn(), user: AuthService.isUser(), producer: AuthService.isProducer(), author: AuthService.isAuthor(), name: AuthService.getUserName(), email: AuthService.getUserEmail()};
+       
+	$rootScope.year = AuthService.getYear();
+
+
+	
 
         $rootScope.username = AuthService.getUserName();
 

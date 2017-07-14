@@ -1,9 +1,83 @@
 
-angular.module('myApp').controller('loginController',
-  ['$scope', '$location', 'AuthService',
+angular.module('myApp').controller('lostController',
+	['$scope', '$location', 'AuthService', 
   function ($scope, $location, AuthService) {
+	  
+      $scope.reset = function () {
+
+	$scope.$emit('clear');
+	  	// call login from service
+        AuthService.reset($scope.resetForm.email)
+        // handle success
+        .then(function () {
+	  $scope.$emit("info", "We've sent an email with instructions on how to reset your password");
+          $scope.disabled = false;
+        })
+        // handle error
+        .catch(function () {
+	  $scope.$emit("error", "Something went wrong trying to reset your password - please check the email address entered");
+          $scope.disabled = false;
+        });
+
+	  
+      }
+  }
+]);
+
+
+angular.module('myApp').controller('resetController',
+	['$scope', '$location', 'AuthService', '$routeParams',
+  function ($scope, $location, AuthService, $routeParams) {
+	  
+      $scope.reset = function () {
+	  	// call login from service
+        
+	      if ($scope.resetForm.password != $scope.resetForm.passwordconfirm) {
+		$scope.$emit("error", "Passwords don't match");
+	      }
+	      else
+	      {
+
+	        console.log($routeParams);
+		email = $routeParams.email;
+		key = $routeParams.key;
+
+
+		AuthService.reset(email, key, $scope.resetForm.password)
+        	// handle success
+        	.then(function () {
+		  console.log("reset complete - redirect to login");
+		  $location.url("/login/resetcomplete");
+	          $scope.disabled = false;
+	        })
+	        // handle error
+       	 	.catch(function () {
+	  	  $scope.$emit("error", "Something went wrong trying to reset your password");
+        	  $scope.disabled = false;
+        	});
+
+	      }
+
+	  
+      }
+  }
+]);
+
+
+angular.module('myApp').controller('loginController',
+  ['$scope', '$location', 'AuthService', '$routeParams',
+  function ($scope, $location, AuthService, $routeParams) {
+
+	//handle showing status messages on the login screen
+      if ($routeParams.status == 'activated') {
+	$scope.$emit('info', "Account activated - please login below");
+      }
+      if ($routeParams.status == 'resetcomplete') {
+	$scope.$emit("info", "Your password has been reset - you can now use it to log in");
+      }
 
     $scope.login = function () {
+
 
       // initial values
       $scope.error = false;
@@ -23,9 +97,8 @@ angular.module('myApp').controller('loginController',
         })
         // handle error
         .catch(function () {
-          $scope.error = true;
+	  $scope.$emit("error", "Login failed - please check your username and password, and that your account is activated");
           $scope.username = "";
-          $scope.errorMessage = "Invalid username and/or password";
           $scope.disabled = false;
           $scope.loginForm = {};
         });
@@ -49,11 +122,9 @@ angular.module('myApp').controller('accountController',
 
       $scope.updateUser = function () {
 
-        console.log("updating user");
 
         if ($scope.user.newPass != $scope.user.newPassConfirm) {
-                $scope.error = true;
-                $scope.errorMessage = "New passwords don't match";
+                $scope.$emit('error', "New passwords don't match");
         } else {
                 AccountService.update($scope.user)
                     .then(function () {
@@ -64,8 +135,7 @@ angular.module('myApp').controller('accountController',
                         });
                     })
                     .catch(function () {
-                        $scope.error = true;
-                        $scope.errorMessage = "Failed to update account";
+                        $scope.emit('error', "Failed to update account");
                         $scope.disabled = false;
                         $scope.registerForm = {};
                     });
@@ -341,8 +411,7 @@ angular.module('myApp').controller('ratingController',
                                 $route.reload();
                             })
                             .catch(function () {
-                                $scope.error = true;
-                                $scope.errorMessage = "Something went wrong!";
+                                $scope.$emit('error', "Failed to save rating");
                                 $scope.disabled = false;
                                 $scope.registerForm = {};
                             });
@@ -433,8 +502,7 @@ angular.module('myApp').controller('scriptController',
 
                             })
                             .catch(function () {
-                                $scope.error = true;
-                                $scope.errorMessage = "Something went wrong!";
+                                $scope.$emit('error', "Failed to update script");
                                 $scope.disabled = false;
                                 $scope.registerForm = {};
                             });
@@ -460,8 +528,7 @@ angular.module('myApp').controller('scriptController',
                                 $scope.updated = true;
                             })
                             .catch(function () {
-                                $scope.error = true;
-                                $scope.errorMessage = "Something went wrong!";
+                                $scope.$emit('error', "Failed to update script");
                                 $scope.disabled = false;
                                 $scope.registerForm = {};
                             });
@@ -513,27 +580,33 @@ angular.module('myApp').controller('registerController',
 
     $scope.register = function () {
 
-      // initial values
-      $scope.error = false;
-      $scope.disabled = true;
+      if ($scope.registerForm.password != $scope.registerForm.passwordConfirm) {
+	$scope.$emit("error", "Passwords don't match");
+      } else {
 
-      // call register from service
-      AuthService.register($scope.registerForm.name, 
+      	$scope.disabled = true;
+
+      	// call register from service
+      	AuthService.register($scope.registerForm.name, 
 			   $scope.registerForm.email,
                            $scope.registerForm.password)
         // handle success
         .then(function () {
-          $location.path('/login');
+	  $scope.$emit('info', "Registration sucessful - you'll recieve an email shortly with details on how to activate your account");
+          
           $scope.disabled = false;
           $scope.registerForm = {};
+
+
         })
         // handle error
         .catch(function () {
-          $scope.error = true;
-          $scope.errorMessage = "Something went wrong!";
+          $scope.$emit('error', "Registration failed - if your email address is already registered, please use the password reset");
           $scope.disabled = false;
           $scope.registerForm = {};
         });
+
+      }
 
     };
 
@@ -616,8 +689,7 @@ angular.module('myApp').controller('adminController',
 			}
                     })
                     .catch(function () {
-                        $scope.error = true;
-                        $scope.errorMessage = "Something went wrong!";
+                        $scope.$emit('error', "Operation failed - please try again");
                         $scope.disabled = false;
                         $scope.registerForm = {};
                     });
