@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="static/css/writefest.css">
   <link rel="stylesheet" href="static/css/font-awesome.min.css">
+  <link rel="stylesheet" href="static/js/plugins/textAngular.css">
 </head>
   <body>
     <div class="container">
@@ -21,7 +22,7 @@
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar-header" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="#">WriteFest {{year}} Submissions</a>
+        <a class="navbar-brand" href="#/">WriteFest {{year}}</a>
         <div class="collapse  navbar-collapse" id="navbar-header">
 
           <ul class="navbar-nav mr-auto">
@@ -81,8 +82,8 @@
         </div>
       </nav>
     
-		<div ng-show="error" class="alert alert-danger">{{errorMessage}}</div>
-		<div ng-show="info" class="alert alert-success">{{infoMessage}}</div>
+		<div ng-show="error" class="alert alert-danger animate-show-hide">{{errorMessage}}</div>
+		<div ng-show="info" class="alert alert-success animate-show-hide">{{infoMessage}}</div>
 
         <div ng-view>
         </div>
@@ -98,9 +99,16 @@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.10/angular.min.js" type="text/javascript"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.10/angular-route.min.js" type="text/javascript"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.10/angular-animate.min.js" type="text/javascript"></script>
     
     <script src="static/js/plugins/ng-file-upload-shim.min.js" type="text/javascript"></script>
     <script src="static/js/plugins/ng-file-upload.min.js" type="text/javascript"></script>
+
+    <script src='static/js/plugins/textAngular-rangy.min.js'></script>
+    <script src='static/js/plugins/textAngular-sanitize.min.js'></script>
+    <script src='static/js/plugins/textAngular.min.js'></script>
+
+
     <!-- <script src="static/js/plugins/zxcvbn.js" type="text/javascript></script> -->
     <!-- <script src="static/js/plugins/angular-zxcvbn.js" type="text/javascript></script> -->
 

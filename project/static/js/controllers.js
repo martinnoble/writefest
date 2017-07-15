@@ -107,6 +107,35 @@ angular.module('myApp').controller('loginController',
 
 }]);
 
+angular.module('myApp').controller('homeController',
+  ['$scope', '$location', 'ContentService',
+  function ($scope, $location, ContentService) {
+
+        $scope.showeditor = false;
+
+	ContentService.read("home")
+		.then(function () {
+			$scope.htmlcontent = ContentService.getHtml();
+                    })
+                    .catch(function () {
+                        $scope.$emit('error', "Failed to read page content");
+                    });
+
+	$scope.savecontent = function () {
+		ContentService.write("home", $scope.htmlcontent)
+		.then(function () {
+			$scope.htmlcontent = ContentService.getHtml();
+			$scope.$emit("info", "Content updated");
+                    })
+                    .catch(function () {
+                        $scope.$emit('error', "Failed to save page content");
+                    });
+
+	}
+
+
+}]);
+
 
 angular.module('myApp').controller('authorController',
   ['$scope', '$location', 'AuthService',
@@ -135,7 +164,7 @@ angular.module('myApp').controller('accountController',
                         });
                     })
                     .catch(function () {
-                        $scope.emit('error', "Failed to update account");
+                        $scope.$emit('error', "Failed to update account");
                         $scope.disabled = false;
                         $scope.registerForm = {};
                     });

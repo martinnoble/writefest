@@ -11,3 +11,5 @@ _old
 logs
 project/uploads/*
 !project/uploads/.gitkeep 
+writefest_repo
+dbmanage.py

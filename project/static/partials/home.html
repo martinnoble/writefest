@@ -1,1 +1,12 @@
-<h1>Home</h1>
+<button class="btn btn-outline-secondary btn-edit" ng-show="user.producer" ng-click="showeditor = !showeditor">Edit</button>
+
+<div ng-if="user.producer && showeditor">
+	<div text-angular ng-model="$parent.htmlcontent"></div>
+	<button class="btn btn-outline-success" ng-click="savecontent()">Save</button>
+</div>
+
+<div class="row justify-content-md-center">
+	<div class="col-md-9">
+		<div ng-bind-html="htmlcontent | rawHtml" class="page-content"></div>
+	</div>
+</div>

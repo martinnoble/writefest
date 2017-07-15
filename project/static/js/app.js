@@ -1,4 +1,10 @@
-var myApp = angular.module('myApp', ['ngRoute', 'ngFileUpload']);
+var myApp = angular.module('myApp', ['ngRoute', 'ngFileUpload', 'textAngular', 'ngAnimate']);
+
+myApp.filter('rawHtml', ['$sce', function($sce){
+	  return function(val) {
+		      return $sce.trustAsHtml(val);
+		    };
+}]);
 
 myApp.directive('ngConfirmClick', [
         function(){
@@ -19,6 +25,7 @@ myApp.config(function ($routeProvider) {
   $routeProvider
     .when('/', {
       templateUrl: 'static/partials/home.html',
+      controller: 'homeController',
       access: {restricted: false}
     })
     .when('/author', {
@@ -93,7 +100,7 @@ myApp.config(function ($routeProvider) {
     });
 });
 
-myApp.run(function ($rootScope, $location, $route, AuthService, $window) {
+myApp.run(function ($rootScope, $location, $route, AuthService, $window, $timeout) {
 
     $rootScope.isActive = function(viewLocation) {
         return viewLocation === $location.path();
@@ -110,6 +117,7 @@ myApp.run(function ($rootScope, $location, $route, AuthService, $window) {
 		$rootScope.errorMessage = message;
 		
 		$window.scrollTo(0,0);
+		$timeout(function() { $rootScope.$emit('clear'); }, 10000);
 	});
 
 	$rootScope.info = false;
@@ -122,14 +130,17 @@ myApp.run(function ($rootScope, $location, $route, AuthService, $window) {
 		$rootScope.infoMessage = message;
 
 		$window.scrollTo(0,0);
+		$timeout(function() { $rootScope.$emit('clear'); }, 10000);
 	});
 
 	$rootScope.$on('clear', function() {
 		$rootScope.info = false;
-		$rootScope.infoMessage = "";
 		$rootScope.error = false;
-		$rootScope.errorMessage = "";
-		
+		$timeout(1000)
+		  .then(function() {
+			$rootScope.infoMessage = "";
+			$rootScope.errorMessage = "";
+		  });
 	});
 
         $rootScope.ratingStatus = [

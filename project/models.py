@@ -201,7 +201,7 @@ class User(db.Model):
     activation_key = db.Column(db.String(32))
     
 
-    def __init__(self, name, email, activation_key, password=str(uuid.uuid4()), user_type=1, can_rate = False, activated = False):
+    def __init__(self, name, email, activation_key = "notset", password=str(uuid.uuid4()), user_type=1, can_rate = False, activated = True):
         self.name = name
         self.email = email
         self.password = bcrypt.generate_password_hash(password)
@@ -296,4 +296,24 @@ class Season(db.Model):
 
     def __repr__(self):
         return u'<Season {0}:{1} -> {2}>'.format(self.id, self.start_date, self.end_date)
+
+class PageContent(db.Model):
+
+    __tablename__ = "pagecontent"
+    
+    page = db.Column(db.String(32), primary_key=True, unique=True)
+    htmlcontent = db.Column(db.String)
+
+    def __init__(self, page, htmlcontent):
+        self.page = page
+        self.htmlcontent = htmlcontent
+    
+    def dump(self):
+        return {
+                'page': self.page, 
+                'htmlcontent': self.htmlcontent, 
+                }
+    
+    def __repr__(self):
+        return u"<PageContente {0}>".format(self.page)
 

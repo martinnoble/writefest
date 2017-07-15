@@ -38,7 +38,7 @@ access_logger.addHandler(handler)
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 
-from project.models import User, UserType, Season, Question, Script, ScriptStatus, File, Rating, Comments
+from project.models import User, UserType, Season, Question, Script, ScriptStatus, File, Rating, Comments, PageContent
 
 mailhost = "localhost"
 mailfrom = "writefest@martinnoble.com"
@@ -90,6 +90,36 @@ def script_open(author, filename):
     
     folder = os.path.join(app.config['UPLOAD_PATH'], str(author))
     return send_from_directory(folder, filename)
+
+@app.route('/api/content', methods=['POST'])
+def content():
+    json_data = request.json
+    page = json_data['page'].lower()
+
+    pageContent = PageContent.query.filter_by(page=page).first()
+    print "From db: " + str(pageContent)
+
+    if json_data.has_key("content"):
+        
+        if pageContent:
+            print "Updating existing page"
+            pageContent.htmlcontent = json_data["content"]
+        else:
+            print "Creating new page"
+            pageContent = PageContent(page, json_data["content"])
+            db.session.add(pageContent)
+
+        
+        db.session.commit()
+    
+    htmlcontent = "<p>No content found</p>"
+    if pageContent:
+        print "Reading content from page: " + str(pageContent)
+        htmlcontent = pageContent.htmlcontent
+
+    status = True
+
+    return jsonify({'result': status, 'content': htmlcontent})
 
 @app.route('/api/register', methods=['POST'])
 def register():

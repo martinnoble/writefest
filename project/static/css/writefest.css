@@ -35,6 +35,19 @@ form .progress {
     line-height: 15px;
 }
 
+
+.animate-show-hide.ng-hide {
+	  opacity: 0;
+  }
+
+.animate-show-hide.ng-hide-add,
+.animate-show-hide.ng-hide-remove {
+	    transition: all linear 1s;
+}
+
+
+
+
 .form-control {
     margin-bottom: 2px
 }
@@ -102,6 +115,12 @@ table .btn, .ratingData .btn {
 
 .no-wrap {
     white-space: nowrap;
+}
+
+.btn-edit {
+	height: 30px;
+    	line-height: initial;
+        padding: 5px;
 }
 
 

@@ -1,4 +1,66 @@
 
+
+angular.module('myApp').factory('ContentService',
+  ['$q', '$timeout', '$http',
+  function ($q, $timeout, $http) {
+
+	var htmlcontent = "";
+    // return available functions for use in controllers
+    return ({
+	read: read,
+	write: write,
+	getHtml: getHtml
+    });
+	function getHtml() {
+		return htmlcontent;
+	}
+     
+	function write(page, content) {
+        // create a new instance of deferred
+
+        var deferred = $q.defer();
+
+        $http.post('/api/content', {page: page, content: content})
+            .success(function (data, status) {
+          if(status === 200 && data.result){
+		htmlcontent = data.content;
+            	deferred.resolve();
+          } else {
+            deferred.reject();
+          }
+        })
+        // handle error
+        .error(function (data) {
+          deferred.reject();
+        });
+
+        return deferred.promise;
+    }
+
+    function read(page) {
+        // create a new instance of deferred
+
+        var deferred = $q.defer();
+
+        $http.post('/api/content', {page: page})
+            .success(function (data, status) {
+          if(status === 200 && data.result){
+		htmlcontent = data.content;
+            	deferred.resolve();
+          } else {
+            deferred.reject();
+          }
+        })
+        // handle error
+        .error(function (data) {
+          deferred.reject();
+        });
+
+        return deferred.promise;
+    }
+
+}]);
+
 angular.module('myApp').factory('AccountService',
   ['$q', '$timeout', '$http',
   function ($q, $timeout, $http) {
