@@ -1,1 +1,143 @@
 <h1>Author</h1>
+
+<div class="row" ng-hide="scriptdata.activeseason">
+    <div class="col-md-12">
+        <h4>Submissions closed</h4>
+
+        <p>Writefest submissions are currently closed - below you can see the status of your submissions from the most recent season</p>
+    </div>
+</div>
+
+<div class="row" ng-show="scriptdata.activeseason">
+    <div class="col-md-12">
+
+        <h4>Scripts</h4>
+
+        <p>You have submitted <b>{{scriptcount}}</b> of your maximum <b>{{scriptmax}}</b> scripts for this year's Writefest</p>
+
+        <p>If a script has been disqualified it will not count against your total.  You can either submit an alternative, or upload a new version and re-submit the same script by selecting "Modify" next to the disqualified script.</p>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="prodTable table table-striped-double">
+            <thead>
+                <tr class="hidden-sm-down">
+                    <th>
+                        <a href="" ng-click="sortBy = 'name'; sortReverse = !sortReverse">
+                            Title
+                            <span ng-show="sortBy == 'name' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'name' && sortReverse" class="fa fa-sort-asc"></span>
+                            <span ng-show="sortBy != 'name'" class="fa fa-sort"></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy = 'pageCount'; sortReverse = !sortReverse">
+                            Pages
+                            <span ng-show="sortBy == 'pageCount' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'pageCount' && sortReverse" class="fa fa-sort-asc"></span>
+                            <span ng-show="sortBy != 'pageCount'" class="fa fa-sort"></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy = 'status'; sortReverse = !sortReverse">
+                            Status
+                            <span ng-show="sortBy == 'status' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'status' && sortReverse" class="fa fa-sort-asc"></span>
+                            <span ng-show="sortBy != 'status'" class="fa fa-sort"></span>
+                        </a>
+                    </th>
+                    <th class="col-file">
+                        File
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy = 'submission_date'; sortReverse = !sortReverse">
+                            Submitted
+                            <span ng-show="sortBy == 'submission_date' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'submission_date' && sortReverse" class="fa fa-sort-asc"></span>
+                            <span ng-show="sortBy != 'submission_date'" class="fa fa-sort"></span>
+                        </a>
+                    </th>
+                    <th>
+                        <button class="btn btn-outline-success" ng-click="submitNew()" ng-show="scriptdata.activeseason && cansubmit">Submit Script</button> 
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr ng-repeat-start="script in scriptdata.scripts | orderBy:sortBy:sortReverse">
+                    <td>
+                        <span class="hidden-md-up heading">Title: </span>
+                        {{ script.name }}
+                    </td>
+                    <td>
+                        <span class="hidden-md-up heading">Pages: </span>
+                        {{ script.pageCount }}
+                    </td>
+                    <td>
+                        <span class="hidden-md-up heading">Status: </span>
+                        {{ (scriptdata.statuses | filter : {'id': script.status})[0].status }}
+                    </td>
+                    <td>
+                        <span class="hidden-md-up heading">File: </span>
+                        <a href="/script/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-id')[0].filename }}" target="_blank">
+                            <span class="fa fa-folder-open hidden-sm-down"></span>
+                            <span class="hidden-md-up">Open</span>
+                        </a>
+                        <span class=""> | </span>
+                        <a href="/script/download/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-id')[0].filename }}">
+                            <span class="fa fa-download hidden-sm-down"></span>
+                            <span class="hidden-md-up">Download</span>
+                        </a>
+
+                    </td>
+                    <td>
+                        <span class="hidden-md-up heading">Submitted: </span>
+                        {{ script.submission_javascript | date : 'mediumDate' }}
+                    </td>
+                    <td> 
+                        <button class="btn btn-outline-primary" ng-click="modify(script)" ng-show="scriptdata.activeseason && script.editable">Modify</button>
+                    </td>
+                </tr>
+                <tr ng-repeat-end>
+                    <th ng-show="script.notes">
+                        Notes:
+                    </th>
+                    <td ng-show="script.notes" colspan="4">
+                        notes go here
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Script Statuses</h4>
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr class="hidden-sm-down">
+                            <th>Status</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="status in scriptdata.statuses">
+                            <td>
+                                <span class="hidden-md-up heading">Status: </span>
+                                {{status.status}}
+                            </td>
+                            <td>
+                                <span class="hidden-md-up heading">Description: </span>
+                                {{status.description}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>

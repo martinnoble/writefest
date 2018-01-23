@@ -16,15 +16,23 @@ th.section-top {
     margin-bottom: 20px;
 }
 
+.form-control:disabled, 
+.form-control[readonly] {
+    background-color: #eceeef !important;
+    opacity: 1;
+}
+
 textarea.ng-valid,
 input.ng-valid {
     background-color: #e6ffe6 !important;
 }
 
+/*
 textarea.ng-pristine,
 input.ng-pristine {
     background-color: #e6faff !important;
 }
+*/
 
 textarea.ng-invalid,
 input.ng-invalid {
@@ -37,12 +45,12 @@ form .progress {
 
 
 .animate-show-hide.ng-hide {
-	  opacity: 0;
-  }
+    opacity: 0;
+}
 
 .animate-show-hide.ng-hide-add,
 .animate-show-hide.ng-hide-remove {
-	    transition: all linear 1s;
+    transition: all linear 1s;
 }
 
 
@@ -118,21 +126,31 @@ table .btn, .ratingData .btn {
 }
 
 .btn-edit {
-	height: 30px;
-    	line-height: initial;
-        padding: 5px;
+    height: 30px;
+    line-height: initial;
+    padding: 5px;
 }
+
+.table-striped-double thead tr {
+    background-color: initial !important;
+}
+
+.table-striped-double tr:nth-child(4n+1), 
+.table-striped-double tr:nth-child(4n+2) {
+        /* Example color */
+        background-color: rgba(0,0,0,.05);
+    }
 
 
 @media (min-width: 768px) {
     .row-striped:nth-of-type(odd) {
-      background-color: #efefef;
+        background-color: #efefef;
     }
 
     .row-striped:nth-of-type(even) {
-      background-color: #ffffff;
+        background-color: #ffffff;
     }
-    
+
 }
 
 
@@ -141,6 +159,6 @@ table .btn, .ratingData .btn {
     td, th {
         display: block;
     }
-   
-    
+
+
 }

@@ -5,7 +5,7 @@
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 from project import app, db
-from project.models import User, UserType, Question, Season, ScriptStatus, Script, File, Rating, Comments
+from project.models import User, UserType, Question, Season, ScriptStatus, Script, File, Rating, Comments, EmailContent
 import datetime
 import time
 import random
@@ -30,10 +30,10 @@ def create_db():
     db.session.add(UserType(type='user'))
     db.session.add(UserType(type='producer'))
     db.session.add(UserType(type='admin'))
-    db.session.add(ScriptStatus(status='Submitted', description='Script has been submitted'))
-    db.session.add(ScriptStatus(status='Under Consideration', description='Script has been included for consideration by the judges', ratable=True))
-    db.session.add(ScriptStatus(status='Selected', description='Script has been short listed for inclusion'))
-    db.session.add(ScriptStatus(status='Not Selected', description='Script has been selected for inclusion in this season'))
+    db.session.add(ScriptStatus(status='Submitted', description='Script has being reviewed by the producers'))
+    db.session.add(ScriptStatus(status='Under Consideration', description='Script has been accepted for consideration by the judges', ratable=True))
+    db.session.add(ScriptStatus(status='Selected', description='Congratulations - Script has been selected for inclusion'))
+    db.session.add(ScriptStatus(status='Not Selected', description='Sorry - Script has not been selected for inclusion'))
     db.session.add(ScriptStatus(status='Disqualified', description='Script has been disqualified - see notes for details'))
 
     db.session.add(Question(question='Should we perform it?', type=2))
@@ -48,6 +48,14 @@ def create_db():
     db.session.add(Question(question='Suitability for WriteFest', description='(i.e. can it be performed with little or no set)'))
 
     db.session.add(Season(year=2017, start_date=datetime.date(2016, 11, 1), end_date=datetime.date(2017, 5, 1)))
+
+    db.session.add(EmailContent(status=100,subject="Writefest registration",htmlcontent=''))
+    db.session.add(EmailContent(status=101,subject="Writefest password reset",htmlcontent=''))
+    db.session.add(EmailContent(status=1,subject="Writefest submission '{scriptname}",htmlcontent=''))
+    db.session.add(EmailContent(status=2,subject="Writefest judging status changed for '{scriptname'",htmlcontent=''))
+    db.session.add(EmailContent(status=3,subject="Writefest judging status changed for '{scriptname'",htmlcontent=''))
+    db.session.add(EmailContent(status=4,subject="Writefest judging status changed for '{scriptname'",htmlcontent=''))
+    db.session.add(EmailContent(status=5,subject="Writefest judging status changed for '{scriptname'",htmlcontent=''))
 
     db.session.commit()
 

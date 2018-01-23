@@ -20,3 +20,5 @@ class BaseConfig(object):
 
     LOGGING_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
+    EMAIL = True
+    EMAIL_AUTHOR = False

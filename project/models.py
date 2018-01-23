@@ -317,3 +317,38 @@ class PageContent(db.Model):
     def __repr__(self):
         return u"<PageContente {0}>".format(self.page)
 
+class EmailContent(db.Model):
+
+    __tablename__ = "emailcontent"
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    status = db.Column(db.Integer, nullable=False)
+    subject = db.Column(db.String(1024),nullable=False)
+    htmlcontent = db.Column(db.String,nullable=False)
+
+    def __init__(self, status, subject, htmlcontent):
+        self.status = status
+        self.subject = subject
+        self.htmlcontent = htmlcontent
+    
+    def dump(self):
+
+        statusname = "Register"
+        if self.status == 101:
+            statusname = "Password Reset"
+        
+        status = ScriptStatus.query.filter_by(id=self.status).first()
+        if status:
+            statusname = status.status
+
+        return {
+                'id': self.id,
+                'status': self.status,
+                'statusname': statusname,
+                'subject': self.subject,
+                'htmlcontent': self.htmlcontent, 
+                }
+    
+    def __repr__(self):
+            return u"<EmailContent {0}: {1}>".format(self.id, self.name)
+

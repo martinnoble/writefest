@@ -1,40 +1,43 @@
 <div class="row">
     <div class="col-lg-6 offset-lg-3">
-	    <div class="jumbotron">
-		    <h1>Account</h1>
+        <div class="jumbotron">
+            <h1>Account</h1>
 
-
-
-		    <form class="form" name="accountForm">
-			    <div class="form-group">
-			        <label>Name</label>
-		            <input type="text" class="form-control" name="email" ng-model="user.name" required>
-			    </div>
+            <form class="form" name="accountForm">
                 <div class="form-group">
-			        <label>Email</label>
-		            <input type="text" class="form-control" name="email" ng-model="user.email" disabled>
-			    </div>
-			    <div class="form-group">
-			        <label>Password</label>
-				    <input type="password" class="form-control" name="password" ng-model="user.password" required>
-			    </div>
-
-
+                    <label>Name</label>
+                    <input type="text" class="form-control" name="email" ng-model="user.name" required>
+                </div>
                 <div class="form-group">
-			        <label>New Password</label>
-				    <input type="password" class="form-control" name="password" ng-model="user.newPass">
-			    </div>
+                    <label>Email</label>
+                    <input type="text" class="form-control" name="email" ng-model="user.email" disabled>
+                </div>
                 <div class="form-group">
-			        <label>Confirm Password</label>
-				    <input type="password" class="form-control" name="password" ng-model="user.newPassConfirm">
-			    </div>
+                    <label>Password</label>
+                    <input type="password" class="form-control" name="password" ng-model="user.password" required>
+                </div>
 
-                <div ng-show="error" class="alert alert-danger">{{errorMessage}}</div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" ng-model="changepassword">
+                        Change password? 
+                    </label>
+                </div>
 
-			    <div>
-				    <button class="btn btn-outline-success" ng-disabled="!accountForm.$valid" ng-click="updateUser()">Update</button>
-			    </div>
-		    </form>
-		</div>
-	</div>
+                <div class="form-group" ng-show="changepassword">
+                    <label>New Password</label>
+                    <input type="password" class="form-control" name="password" ng-model="user.newPass" ng-required="changepassword">
+                </div>
+                <div class="form-group" ng-show="changepassword">
+                    <label>Confirm Password</label>
+                    <input type="password" class="form-control" name="password" ng-model="user.newPassConfirm" ng-required="changepassword">
+                </div>
+
+
+                <div>
+                    <button class="btn btn-outline-success" ng-disabled="!accountForm.$valid" ng-click="updateUser()">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>

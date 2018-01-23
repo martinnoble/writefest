@@ -13,7 +13,7 @@
                     <th></th>
                 </tr>
             </thead>
-            
+
             <tbody>
                 <tr>
                     <td>New</td>
@@ -23,15 +23,15 @@
                     <td>
                         <input class="form-control" type="text" ng-model="newQuestion.description"/>
                     </td>
-		    <td>
+                    <td>
                         <select class="form-control" ng-model="newQuestion.type" ng-options="item.id as item.type for item in questiontypes">
                         </select>
-		    </td>
+                    </td>
                     <td>
                         <button class="btn btn-outline-success" ng-click="update('questions', newQuestion, 'add')">Save</button>           
                     </td>
                 </tr>
-            
+
                 <tr ng-repeat="question in admindata.questions">
                     <td>{{ question.id }}</td>
                     <td>
@@ -58,7 +58,7 @@
                     </td>
                 </tr>
             </tbody>
-            
+
         </table>
     </div>
 </div>

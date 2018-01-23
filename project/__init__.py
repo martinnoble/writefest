@@ -15,7 +15,7 @@ import datetime
 import smtplib
 from email.mime.text import MIMEText
 import uuid
-
+import calendar
 
 # config
 
@@ -38,39 +38,34 @@ access_logger.addHandler(handler)
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 
-from project.models import User, UserType, Season, Question, Script, ScriptStatus, File, Rating, Comments, PageContent
+from project.models import User, UserType, Season, Question, Script, ScriptStatus, File, Rating, Comments, PageContent, EmailContent
 
 mailhost = "localhost"
 mailfrom = "writefest@martinnoble.com"
 
 
-def send_email(to, subject, template, content):
+def send_email(to, status, content):
 
-    print("Sending email to: " + to)
+    if app.config['EMAIL']:
+        print("Sending email to: " + to)
 
-    template_path = os.path.join(app.config['EMAIL_TEMPLATE_PATH'], template)
+        emailcontent = EmailContent.query.filter_by(status=status).first()
 
+        htmlcontent = emailcontent.htmlcontent.encode('ascii', errors='ignore')
+        subject = emailcontent.subject.encode('ascii', errors='ignore')
 
-    print(template_path)
+        msg = MIMEText(htmlcontent.format(**content), 'html')
+        msg['Subject'] = subject.format(**content)
+        msg['From'] = mailfrom
+        msg['To'] = to
 
-    html_content = open(template_path + ".html", 'rb').read()
+        print("performing smtp send")
 
+        s = smtplib.SMTP(mailhost)
+        s.sendmail(mailfrom, [to], msg.as_string())
+        s.quit()
 
-
-    print("read email content");
-
-    msg = MIMEText(html_content.format(**content), 'html')
-    msg['Subject'] = subject
-    msg['From'] = mailfrom
-    msg['To'] = to
-
-    print("performing smtp send")
-
-    s = smtplib.SMTP(mailhost)
-    s.sendmail(mailfrom, [to], msg.as_string())
-    s.quit()
-
-    print("email sending complete")
+        print("email sending complete")
 
 # routes
 
@@ -131,7 +126,8 @@ def register():
         name=json_data['name'],
         email=email,
         password=json_data['password'],
-        activation_key=activation_key
+        activation_key=activation_key,
+        activated=False
     )
 
     status = False
@@ -144,9 +140,14 @@ def register():
     print("Sending email")
     activationurl = app.config['WEBSITE_HOST'] + "/activate/" + email + "/" + activation_key
 
-    email_content = {'year': '2017', 'firstname': json_data['name'].split(" ")[0], 'activateurl': activationurl}
+    email_content = {
+        'author_firstname': json_data['name'].split(" ")[0], 
+        'response_url': activationurl
+        }
+
     print(email_content)
-    send_email(email, "Welcome to Writefest", "welcome", email_content)
+
+    send_email(email, 100, email_content)
 
     print("done")
     status = True
@@ -350,9 +351,9 @@ def passwordreset():
 
             reseturl = app.config['WEBSITE_HOST'] + "/#/passwordreset/" + email + "/" + actkey
 
-            email_content = {'firstname': user.name.split(" ")[0], 'reseturl': reseturl}
+            email_content = {'author_firstname': user.name.split(" ")[0], 'response_url': reseturl}
     
-            send_email(email, "Writefest password reset", "passwordreset", email_content)
+            send_email(email, 101, email_content)
 
             result = True
     else:
@@ -441,43 +442,103 @@ def admin():
     users = User.query.all()
     questions = Question.query.all()
     usertyes = UserType.query.all()
+    emails = EmailContent.query.all()
 
     result = {
                 'result': True, 
                 'users': [ob.dump() for ob in users],
                 'usertypes': [ob.dump() for ob in usertyes],
                 'seasons': [ob.dump() for ob in seasons],
-                'questions': [ob.dump() for ob in questions]
+                'questions': [ob.dump() for ob in questions],
+                'emails': [ob.dump() for ob in emails]
             }
     
     return jsonify(result)
+   
+
+@app.route('/api/admin/email', methods=['POST'])
+def email():
+
+    if session['user_type'] not in ['admin']:
+        return jsonify({'result': False})
+
+    result = False
     
-    
+    newdata = request.json['email']
+    print(newdata)
+
+
+    email = EmailContent.query.filter_by(id=newdata['id']).first()
+
+    if email:
+        email.htmlcontent = newdata['htmlcontent']
+        email.subject = newdata['subject']
+        db.session.commit()
+        result = True
+
+    return jsonify({'result': result})
+
+
 @app.route('/api/script', methods=['GET', 'POST'])
 def script():
     
     
-    if session['user_type'] not in ['admin', 'producer']:
+    if session['user_type'] not in ['admin', 'producer', 'author']:
         return jsonify({'result': False})
 
     if request.method == 'GET':
+        
         files = File.query.all()
-        scripts = Script.query.all()
         statuses = ScriptStatus.query.all()
         seasons = Season.query.all()
-        
-        author_id = UserType.query.filter_by(type='author').first().id
-        
-        author_users = User.query.filter_by(user_type=author_id)
-        
-        result = {
+
+        if session['user_type'] == 'author':
+
+            lastseason = None
+            currentseason = None
+            lateststart = datetime.datetime.min
+            now = datetime.datetime.now()
+
+            activeseason = False
+
+            for season in seasons:
+                if season.start_date > lateststart:
+                    lastseason = season
+                if season.start_date <= now <= season.end_date:
+                    activeseason = True
+
+            seasondata = [lastseason.dump()]
+
+            scripts = Script.query.filter_by(author=session['userid'], season=lastseason.id)
+            author = User.query.filter_by(id=session['userid']).first()
+
+            result = {
                 'result': True, 
                 'scripts': [ob.dump() for ob in scripts],
                 'files': [ob.dump() for ob in files],
                 'statuses': [ob.dump() for ob in statuses],
-                'seasons': [ob.dump() for ob in seasons],
-                'authors': [{'id': -1, 'name': 'New'}] + [ob.dump() for ob in author_users]
-            }
+                'activeseason': activeseason,
+                'author': author.dump(),
+                'seasonid' : lastseason.id
+                }
+
+        else:
+            scripts = Script.query.all()
+            author_id = UserType.query.filter_by(type='author').first().id
+            author_users = User.query.filter_by(user_type=author_id)
+            authordata = [{'id': -1, 'name': 'New'}] + [ob.dump() for ob in author_users]
+            seasondata = [ob.dump() for ob in seasons]
+        
+        
+            result = {
+                'result': True, 
+                'scripts': [ob.dump() for ob in scripts],
+                'files': [ob.dump() for ob in files],
+                'statuses': [ob.dump() for ob in statuses],
+                'seasons': seasondata,
+                'authors': authordata
+                }
+
         return jsonify(result)
     else:
         print("Handling script post")
@@ -491,7 +552,12 @@ def script():
         
         dbfilename = None
         author = scriptdata['author']
-        
+       
+        #only allow authors to update their own scripts
+        if session['user_type'] == 'author' and author != session['userid']:
+            print("Refusing to update script for another author")
+            return jsonify({'result': result})
+
         if author == -1:
             print("Creating new author")
             author_user = User(name=scriptdata['user_name'], email=scriptdata['user_email'])
@@ -499,7 +565,10 @@ def script():
             db.session.commit()
             print(author_user)
             author = author_user.id
-            
+        
+        #get author data for emails
+        author_user = User.query.filter_by(id=author).first()
+        
         if scriptdata.has_key('tempfilename'):
             #move the file to its final name
             authorfolder = os.path.join(app.config['UPLOAD_PATH'], str(author))
@@ -530,8 +599,14 @@ def script():
             file = File(script=script.id, filename=dbfilename)
             db.session.add(file)
             print(file)
-        
-        
+
+
+            #send email if author uploaded script
+            if app.config['EMAIL_AUTHOR']:
+                email_content = {'author_firstname': author_user.name.split(" ")[0], 'script_title': scriptdata['name']}
+                print(email_content)
+                send_email(author_user.email, scriptdata['status'], email_content)
+
             result = True
             
         elif action == 'delete':
@@ -541,7 +616,7 @@ def script():
             print(script)
             db.session.delete(script)
             result = True
-        
+
         elif action == 'update':
             print("Updating script")
             script = Script.query.filter_by(id=scriptdata['id']).first()
@@ -549,12 +624,33 @@ def script():
             script.name = scriptdata['name']
             script.author = scriptdata['author']
             script.season = scriptdata['season']
+
+            sendemail = False
+            if script.status != scriptdata['status'] and app.config['EMAIL_AUTHOR']:
+                sendemail=True
+
             script.status = scriptdata['status']
             script.pageCount = scriptdata['pageCount']
             if dbfilename:
                 file = File(script=script.id, filename=dbfilename)
                 db.session.add(file)
-            
+
+            if sendemail:
+                #status changed - send email
+                notes = """This is some notes
+                Over multiple lines"""
+
+                status = ScriptStatus.query.filter_by(id=scriptdata['status']).first()
+                email_content = {
+                    'author_firstname': author_user.name.split(" ")[0], 
+                    'script_title': scriptdata['name'], 
+                    'script_notes': notes,
+                    'script_status': status.status,
+                    'script_status_description': status.description
+                }
+
+                send_email(author_user.email, scriptdata['status'], email_content)
+                
             result = True
         
         if result:

@@ -1,253 +1,261 @@
 <!-- New Script Modal -->
 <div class="modal fade" id="modalNewScript" tabindex="-1" role="dialog" aria-labelledby="modalNewScriptTitle" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalNewScriptTitle">Add Script</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-          <div class="container-fluid">
-            <form name="newScriptForm">
-                <div class="row">
-                    <div class="col-md-4">
-                        Season:
-                    </div>
-                    <div class="col-md-8">
-                        <select class="form-control" ng-model="newScript.season" ng-options="item.id as item.year for item in scriptdata.seasons">
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        Status:
-                    </div>
-                    <div class="col-md-8">
-                        <select class="form-control" ng-model="newScript.status" ng-options="item.id as item.status for item in scriptdata.statuses">
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        Title:
-                    </div>
-                    <div class="col-md-8">
-                        <input class="form-control" name="scriptName" type="text" ng-model="newScript.name" required/>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        Page Count:
-                    </div>
-                    <div class="col-md-8">
-                        <input class="form-control" name="sciptPageCount" type="number" ng-model="newScript.pageCount" required/>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        Author:
-                    </div>
-                    <div class="col-md-8">
-                        <select class="form-control" ng-model="newScript.author" ng-options="item.id as item.name for item in scriptdata.authors">
-                        </select>
-                    </div>
-                </div>
-                <div class="row" ng-show="newScript.author == -1">
-                    <div class="col-md-4">
-                        Author Name:
-                    </div>
-                    <div class="col-md-8">
-                        <input class="form-control" type="text" ng-model="newScript.user_name" ng-required="newScript.author == -1">
-                    </div>
-                </div>
-                <div class="row" ng-show="newScript.author == -1">
-                    <div class="col-md-4">
-                        Author Email:
-                    </div>
-                    <div class="col-md-8">
-                        <Input class="form-control" type="email" ng-model="newScript.user_email" ng-required="newScript.author == -1">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        File
-                    </div>
-                    <div class="col-md-8">
-                        <input class="form-control form-control-file" type="file" ngf-select ng-model="newScript.file" name="file"
-                             accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" ngf-max-size="10MB" ng-required="newScript.id == 0"
-                             ngf-model-invalid="errorFile">
-                        <i ng-show="myForm.file.$error.maxSize">File too large
-                          {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
-                        <button ng-click="newScript.file = null" ng-show="newScript.file" class="btn btn-outline-danger">Remove</button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <span class="progress" ng-show="newScript.file.progress >= 0">
-                            <div style="width:{{newScript.file.progress}}%"
-                                ng-bind="newScript.file.progress + '%'"></div>
-                        </span>
-                    </div>
-                </div>
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalNewScriptTitle">Add Script</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form name="newScriptForm">
+                        <div class="row">
+                            <div class="col-md-4">
+                                Season:
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" ng-model="newScript.season" ng-options="item.id as item.year for item in scriptdata.seasons">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                Status:
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" ng-model="newScript.status" ng-options="item.id as item.status for item in scriptdata.statuses">
+                                </select>
+                            </div>
+                        </div>
+                        <!-- div class="row">
+                            <div class="col-md-4">
+                                Notes:
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-control" name="scripNotes" type="text" ng-model="newScript.notes" ng-required=""/>
+                            </div>
+                        </div -->
+                        <div class="row">
+                            <div class="col-md-4">
+                                Title:
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-control" name="scriptName" type="text" ng-model="newScript.name" required/>yy
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                Page Count:
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-control" name="sciptPageCount" type="number" ng-model="newScript.pageCount" required/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                Author:
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" ng-model="newScript.author" ng-options="item.id as item.name for item in scriptdata.authors">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row" ng-show="newScript.author == -1">
+                            <div class="col-md-4">
+                                Author Name:
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-control" type="text" ng-model="newScript.user_name" ng-required="newScript.author == -1">
+                            </div>
+                        </div>
+                        <div class="row" ng-show="newScript.author == -1">
+                            <div class="col-md-4">
+                                Author Email:
+                            </div>
+                            <div class="col-md-8">
+                                <Input class="form-control" type="email" ng-model="newScript.user_email" ng-required="newScript.author == -1">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                File
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-control form-control-file" type="file" ngf-select ng-model="newScript.file" name="file"
+                                                                                                                               accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" ngf-max-size="10MB" ng-required="newScript.id == 0"
+                                                                                                                                                                                                                                                                       ngf-model-invalid="errorFile">
+                                <i ng-show="myForm.file.$error.maxSize">File too large
+                                    {{errorFile.size / 1000000|number:1}}MB: max 2M</i>
+                                <button ng-click="newScript.file = null" ng-show="newScript.file" class="btn btn-outline-danger">Remove</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="progress" ng-show="newScript.file.progress >= 0">
+                                    <div style="width:{{newScript.file.progress}}%"
+                                         ng-bind="newScript.file.progress + '%'"></div>
+                                </span>
+                            </div>
+                        </div>
 
-              </div>
-          </form>
-      </div>
+                </div>
+                    </form>
+            </div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button ng-disabled="!newScriptForm.$valid" ng-show="newScript.id == 0" class="btn btn-outline-success" ng-click="update(newScript, 'add')">Save</button>
-        <button ng-disabled="!newScriptForm.$valid" ng-hide="newScript.id == 0" class="btn btn-outline-success" ng-click="update(newScript, 'update')">Save</button>
-        <button class="btn btn-outline-danger" ng-hide="newScript.id == 0" confirmed-click="update(newScript, 'delete')" ng-confirm-click="Are you sure?">Delete</button>
-      </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button ng-disabled="!newScriptForm.$valid" ng-show="newScript.id == 0" class="btn btn-outline-success" ng-click="update(newScript, 'add')">Save</button>
+                <button ng-disabled="!newScriptForm.$valid" ng-hide="newScript.id == 0" class="btn btn-outline-success" ng-click="update(newScript, 'update')">Save</button>
+                <button class="btn btn-outline-danger" ng-hide="newScript.id == 0" confirmed-click="update(newScript, 'delete')" ng-confirm-click="Are you sure?">Delete</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <h1>Producer</h1>
 
 <div class="row">
     <div class="col-md-12">
-        
+
         <h4>Scripts</h4>
-        
+
         <form class="">
             <div class="row">         
                 <div class="form-group col-sm-4">
                     <label for="filterSeason">Season:</label>
                     <select id="filterSeason" class="form-control" 
-                            ng-model="filterBy.season" 
-                            ng-options="item.id as item.year for item in scriptdata.seasons" 
-                            ng-change="filterUpdate()">
+                                              ng-model="filterBy.season" 
+                                              ng-options="item.id as item.year for item in scriptdata.seasons" 
+                                              ng-change="filterUpdate()">
                         <option value=""> - All -</option>
                     </select>
                 </div>
                 <div class="form-group col-sm-4">
                     <label for="filterStatus">Status:</label>
                     <select id="filterStatus" class="form-control" 
-                            ng-model="filterBy.status" 
-                            ng-options="item.id as item.status for item in scriptdata.statuses" 
-                            ng-change="filterUpdate()">
+                                              ng-model="filterBy.status" 
+                                              ng-options="item.id as item.status for item in scriptdata.statuses" 
+                                              ng-change="filterUpdate()">
                         <option value=""> - All -</option>
                     </select>
                 </div>
                 <div class="form-group col-sm-4">
                     <label for="filterAuthor">Author:</label>
                     <select id="filterAuthor" class="form-control" 
-                            ng-model="filterBy.author" 
-                            ng-options="item.id as item.name for item in (scriptdata.authors | filter:{id:'!-1'})" 
-                            ng-change="filterUpdate()">
+                                              ng-model="filterBy.author" 
+                                              ng-options="item.id as item.name for item in (scriptdata.authors | filter:{id:'!-1'})" 
+                                              ng-change="filterUpdate()">
                         <option value=""> - All -</option>
                     </select>
                 </div>
             </div>
         </form>
-        
+
 
         <table class="prodTable table table-striped">
             <thead>
-            <tr class="hidden-sm-down">
-                <th>
-                    <a href="" ng-click="sortBy = 'id'; sortReverse = !sortReverse">
-                        Id
-                        <span ng-show="sortBy == 'id' && !sortReverse" class="fa fa-sort-desc"></span>
-                        <span ng-show="sortBy == 'id' && sortReverse" class="fa fa-sort-asc"></span>
-                        <span ng-show="sortBy != 'id'" class="fa fa-sort"></span>
-                    </a>
-                </th>
-                <th>
-                    <a href="" ng-click="sortBy = 'season'; sortReverse = !sortReverse">
-                        Season
-                        <span ng-show="sortBy == 'season' && !sortReverse" class="fa fa-sort-desc"></span>
-                        <span ng-show="sortBy == 'season' && sortReverse" class="fa fa-sort-asc"></span>
-                        <span ng-show="sortBy != 'season'" class="fa fa-sort"></span>
-                    </a>
-                </th>
-                <th>
-                    <a href="" ng-click="sortBy = 'status'; sortReverse = !sortReverse">
-                        Status
-                        <span ng-show="sortBy == 'status' && !sortReverse" class="fa fa-sort-desc"></span>
-                        <span ng-show="sortBy == 'status' && sortReverse" class="fa fa-sort-asc"></span>
-			<span ng-show="sortBy != 'status'" class="fa fa-sort"></span>
-                    </a>
-                </th>
-                <th>
-                    <a href="" ng-click="sortBy = 'name'; sortReverse = !sortReverse">
-                        Title
-                        <span ng-show="sortBy == 'name' && !sortReverse" class="fa fa-sort-desc"></span>
-                        <span ng-show="sortBy == 'name' && sortReverse" class="fa fa-sort-asc"></span>
-			<span ng-show="sortBy != 'name'" class="fa fa-sort"></span>
-                    </a>
-                </th>
-                <th class="col-file">
+                <tr class="hidden-sm-down">
+                    <th>
+                        <a href="" ng-click="sortBy = 'id'; sortReverse = !sortReverse">
+                            Id
+                            <span ng-show="sortBy == 'id' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'id' && sortReverse" class="fa fa-sort-asc"></span>
+                            <span ng-show="sortBy != 'id'" class="fa fa-sort"></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy = 'season'; sortReverse = !sortReverse">
+                            Season
+                            <span ng-show="sortBy == 'season' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'season' && sortReverse" class="fa fa-sort-asc"></span>
+                            <span ng-show="sortBy != 'season'" class="fa fa-sort"></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy = 'status'; sortReverse = !sortReverse">
+                            Status
+                            <span ng-show="sortBy == 'status' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'status' && sortReverse" class="fa fa-sort-asc"></span>
+                            <span ng-show="sortBy != 'status'" class="fa fa-sort"></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy = 'name'; sortReverse = !sortReverse">
+                            Title
+                            <span ng-show="sortBy == 'name' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'name' && sortReverse" class="fa fa-sort-asc"></span>
+                            <span ng-show="sortBy != 'name'" class="fa fa-sort"></span>
+                        </a>
+                    </th>
+                    <th class="col-file">
                         File
-                </th>
-                <th>
-                    <a href="" ng-click="sortBy = 'author'; sortReverse = !sortReverse">
-                        Author
-                        <span ng-show="sortBy == 'author' && !sortReverse" class="fa fa-sort-desc"></span>
-                        <span ng-show="sortBy == 'author' && sortReverse" class="fa fa-sort-asc"></span>
-			<span ng-show="sortBy != 'author'" class="fa fa-sort"></span>
-                    </a>
-                </th>
-                <th>
-                    <a href="" ng-click="sortBy = 'submission_date'; sortReverse = !sortReverse">
-                        Submitted
-                        <span ng-show="sortBy == 'submission_date' && !sortReverse" class="fa fa-sort-desc"></span>
-                        <span ng-show="sortBy == 'submission_date' && sortReverse" class="fa fa-sort-asc"></span>
-			<span ng-show="sortBy != 'submission_date'" class="fa fa-sort"></span>
-                    </a>
-                </th>
-                <th>
-                    <button class="btn btn-outline-primary" data-toggle="modal" data-target="#modalNewScript" ng-click="resetNewScript()">Add</button>
-                </th>
-            </tr>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy = 'author'; sortReverse = !sortReverse">
+                            Author
+                            <span ng-show="sortBy == 'author' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'author' && sortReverse" class="fa fa-sort-asc"></span>
+                            <span ng-show="sortBy != 'author'" class="fa fa-sort"></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy = 'submission_date'; sortReverse = !sortReverse">
+                            Submitted
+                            <span ng-show="sortBy == 'submission_date' && !sortReverse" class="fa fa-sort-desc"></span>
+                            <span ng-show="sortBy == 'submission_date' && sortReverse" class="fa fa-sort-asc"></span>
+                            <span ng-show="sortBy != 'submission_date'" class="fa fa-sort"></span>
+                        </a>
+                    </th>
+                    <th>
+                        <button class="btn btn-outline-success" data-toggle="modal" data-target="#modalNewScript" ng-click="resetNewScript()">Add</button>
+                    </th>
+                </tr>
             </thead>
-            
+
             <tbody>
 
-            <tr ng-repeat="script in scriptdata.scripts | orderBy:sortBy:sortReverse | filter:filterBy:True">
-                <td class="hidden-sm-down">{{ script.id }}</td>
-                <td>
-                    <span class="hidden-md-up heading">Season: </span>
-                    {{ (scriptdata.seasons | filter : {'id': script.season})[0].year }}
-                </td>
-                <td>
-                    <span class="hidden-md-up heading">Status: </span>
-                    {{ (scriptdata.statuses | filter : {'id': script.status})[0].status }}
-                </td>
-                <td>
-                    <span class="hidden-md-up heading">Title: </span>
-                    {{ script.name }}
-                </td>
-                <td>
-                    <span class="hidden-md-up heading">File: </span>
-		    <a href="/script/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-id')[0].filename }}" target="_blank">
-			    <span class="fa fa-folder-open hidden-sm-down"></span>
-			    <span class="hidden-md-up">Open</span>
-		    </a>
-                    <span class=""> | </span>
-		    <a href="/script/download/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-id')[0].filename }}">
-			    <span class="fa fa-download hidden-sm-down"></span>
-			    <span class="hidden-md-up">Download</span>
-		    </a>
-                
-		</td>
-                <td>
-                    <span class="hidden-md-up heading">Author: </span>
-                    {{ (scriptdata.authors | filter : {'id': script.author} : true)[0].name }}
-                </td>
-                <td>
-                    <span class="hidden-md-up heading">Submitted: </span>
-                    {{ script.submission_javascript | date : 'mediumDate' }}
-                </td>
-                <td>
-                    <button class="btn btn-outline-secondary" ng-hide="editingData[script.id]" ng-click="modify(script)">Modify</button>
-                </td>
-                
-            </tr>
+                <tr ng-repeat="script in scriptdata.scripts | orderBy:sortBy:sortReverse | filter:filterBy:True">
+                    <td class="hidden-sm-down">{{ script.id }}</td>
+                    <td>
+                        <span class="hidden-md-up heading">Season: </span>
+                        {{ (scriptdata.seasons | filter : {'id': script.season})[0].year }}
+                    </td>
+                    <td>
+                        <span class="hidden-md-up heading">Status: </span>
+                        {{ (scriptdata.statuses | filter : {'id': script.status})[0].status }}
+                    </td>
+                    <td>
+                        <span class="hidden-md-up heading">Title: </span>
+                        {{ script.name }}
+                    </td>
+                    <td>
+                        <span class="hidden-md-up heading">File: </span>
+                        <a href="/script/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-id')[0].filename }}" target="_blank">
+                            <span class="fa fa-folder-open hidden-sm-down"></span>
+                            <span class="hidden-md-up">Open</span>
+                        </a>
+                        <span class=""> | </span>
+                        <a href="/script/download/{{ ((scriptdata.files | filter : {'script': script.id}) | orderBy:'-id')[0].filename }}">
+                            <span class="fa fa-download hidden-sm-down"></span>
+                            <span class="hidden-md-up">Download</span>
+                        </a>
+
+                    </td>
+                    <td>
+                        <span class="hidden-md-up heading">Author: </span>
+                        {{ (scriptdata.authors | filter : {'id': script.author} : true)[0].name }}
+                    </td>
+                    <td>
+                        <span class="hidden-md-up heading">Submitted: </span>
+                        {{ script.submission_javascript | date : 'mediumDate' }}
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-primary" ng-hide="editingData[script.id]" ng-click="modify(script)">Modify</button>
+                    </td>
+
+                </tr>
             </tbody>
         </table>
     </div>

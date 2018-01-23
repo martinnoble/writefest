@@ -1,0 +1,43 @@
+
+Email subject: <input type="text" class="form-control" ng-model="selectedEmail.subject" required>
+Email body:
+<div text-angular ng-model="selectedEmail.htmlcontent"></div>
+<button class="btn btn-outline-success" ng-click="saveemail(selectedEmail)">Save</button>
+
+
+<h4>Available keywords</h4>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Keyword</th>
+            <th>Descrition</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{author_firstname}</td>
+            <td>Firstname of Author</td>
+        </tr>
+        <tr>
+            <td>{response_url}</td>
+            <td>Url for account activation and password reset</td>
+        </tr>
+        <tr>
+            <td>{script_title}</td>
+            <td>Title of script for status updates</td>
+        </tr>
+        <tr>
+            <td>{script_status}</td>
+            <td>New status of script for status updates</td>
+        </tr>
+        <tr>
+            <td>{script_status_description}</td>
+            <td>Description of new status for status updates</td>
+        </tr>
+        <tr>
+            <td>{script_notes}</td>
+            <td>Notes added when script is disqualified</td>
+        </tr>
+    </tbody>
+</table>

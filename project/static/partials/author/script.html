@@ -1,0 +1,84 @@
+<h1>Script {{mode}}</h1>
+
+<div ng-hide="selectedScript.editable">
+<p>
+Scripts can only be edited when in the following statuses:
+<ul>
+    <li>Submitted</li>
+    <li>Disqualified</li>
+</ul>
+</p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        Status:
+    </div>
+    <div class="col-md-8">
+        <input class="form-control" name="scriptName" type="text"
+            value="{{ (scriptdata.statuses | filter : {'id': selectedScript.status})[0].status }}" 
+            disabled/>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        Title:
+    </div>
+    <div class="col-md-8">
+        <input class="form-control" name="scriptName" type="text" ng-model="selectedScript.name" required ng-disabled="!selectedScript.editable"/>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        Page Count:
+    </div>
+    <div class="col-md-8">
+        <input class="form-control" name="sciptPageCount" type="number" ng-model="selectedScript.pageCount" required ng-disabled="!selectedScript.editable"/>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        File:
+        <span class="progress" ng-show="selectedScript.file.progress >= 0">
+            <div style="width:{{newScript.file.progress}}%"
+                 ng-bind="selectedScript.file.progress + '%'"></div>
+        </span>
+    </div>
+    <div class="col-md-8">
+        <input class="form-control form-control-file" 
+            type="file" 
+            name="file"
+            accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
+            ngf-select 
+            ng-model="selectedScript.file" 
+            ngf-max-size="10MB" 
+            ng-required="selectedScript.id == 0 || selectedScript.status == 5"
+            ngf-model-invalid="errorFile"
+            ng-disabled="!selectedScript.editable">
+        <i ng-show="myForm.file.$error.maxSize">
+            File too large {{errorFile.size / 1000000|number:1}}MB: max 2M
+        </i>
+        <button ng-click="selectedScript.file = null" 
+            ng-show="selectedScript.file" 
+            class="btn btn-outline-danger">
+            Remove
+        </button>
+    </div>
+</div>
+
+<div class="row justify-content-md-center">
+    <div class="col-md-3">
+        <button class="btn btn-block btn-outline-primary" ng-click="back()">Back</button>
+    </div>
+    <div class="col-md-3">
+        <button class="btn btn-block btn-outline-success" ng-click="save()" ng-disabled="!selectedScript.editable">
+            <span ng-show="selectedScript.status != 5 && selectedScript.id > 0">Save changes</span>
+            <span ng-show="selectedScript.status == 5">Re-submit script</span>
+            <span ng-show="selectedScript.id == 0">Submit script</span>
+        </button>
+    </div>
+</div>
+
+
+
